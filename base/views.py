@@ -1,3 +1,135 @@
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.models import User
+from django.contrib import messages
+
+
+def index(request):
+    return render(request, 'base/index.html', {
+        'user': request.user
+    })
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+        
+    if request.method == 'POST':
+        login_identifier = request.POST.get('login_identifier')
+        password = request.POST.get('password')
+        
+        if not login_identifier or not password:
+            messages.error(request, 'Please fill in all fields')
+            return render(request, 'base/login.html')
+
+        # Try to find user by email first
+        try:
+            user = User.objects.get(email=login_identifier)
+            username = user.username
+        except User.DoesNotExist:
+            # If email doesn't exist, try username
+            username = login_identifier
+
+        user = authenticate(request, username=username, password=password)
+        
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Invalid credentials')
+            
+    return render(request, 'base/login.html')
+
+def signup_view(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+        
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        username = request.POST.get('username')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        
+        if not email or not username or not password1 or not password2:
+            messages.error(request, 'Please fill in all fields')
+            return render(request, 'base/login.html')
+            
+        # Check if email is valid
+        if not email or '@' not in email or '.' not in email:
+            messages.error(request, 'Please enter a valid email address')
+            return render(request, 'base/login.html')
+            
+        if password1 != password2:
+            messages.error(request, 'Passwords do not match')
+            return render(request, 'base/login.html')
+            
+        if len(password1) < 8:
+            messages.error(request, 'Password must be at least 8 characters long')
+            return render(request, 'base/login.html')
+            
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username already exists')
+            return render(request, 'base/login.html')
+            
+        try:
+            user = User.objects.create_user(username=username, email=email, password=password1)
+            login(request, user)
+            return redirect('index')
+        except Exception as e:
+            messages.error(request, f'Error creating user: {str(e)}')
+            
+    return render(request, 'base/login.html')
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, 'You have been logged out successfully')
+    return redirect('login')
 from django.shortcuts import render
 
-# Create your views here.
+@login_required(login_url='login')
+def profile(request):
+    return render(request, 'base/profile.html')
+@login_required(login_url='login')
+def order_history(request):
+    return render(request, 'base/order_history.html')
+
+@login_required(login_url='login')
+def wishlist_view(request):
+    return render(request, 'base/wishlist.html')
+
+def cart(request):
+    return render(request, 'base/cart.html', {
+        'user': request.user
+    })
+
+@login_required(login_url='login')
+def vouchers_view(request):
+    return render(request, 'base/vouchers.html')
+@login_required(login_url='login')
+def payment(request):
+    return render(request, 'base/payment.html', {
+        'user': request.user
+    })
+
+def TajPalace(request):
+    return render(request, 'base/TajPalace.html')
+
+def PunjabGrill(request):
+    return render(request, 'base/PunjabGrill.html')
+
+def DosaPlaza(request):
+    return render(request, 'base/DosaPlaza.html')
+
+def BiryaniHouse(request):
+    return render(request, 'base/BiryaniHouse.html')
+
+def MughalsKitchen(request):
+    return render(request, 'base/MughalsKitchen.html')
+
+def SarwanaBhawan(request):
+    return render(request, 'base/SarwanaBhawan.html')
+
+# def payment(request):
+#     return render(request, 'base/payment.html')
+
+# view changed
