@@ -7,6 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   </head>
   <style>:root {
   --font-family: sans-serif;
@@ -1156,6 +1158,174 @@ a:hover {
     font-size: 1rem;
   }
 }
+
+/* User Menu Styles */
+.user-menu {
+  position: fixed;
+  top: 0;
+  right: -400px; /* Start off-screen */
+  width: 400px;
+  height: 100vh;
+  background: white;
+  box-shadow: -4px 0 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  transition: right 0.3s ease-in-out;
+  overflow-y: auto;
+}
+
+.user-menu.active {
+  right: 0;
+}
+
+.user-menu-header {
+  padding: 20px;
+  background: #f8f8f8;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.user-menu-header .user-info i {
+  color: #000;
+  font-size: 24px;
+}
+
+.close-menu-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.close-menu-btn:hover {
+  transform: scale(1.1);
+}
+
+.close-menu-btn i {
+  color: #000;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-avatar {
+  width: 56px;
+  height: 56px;
+  background: #1a1a1a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.user-avatar i {
+  width: 28px;
+  height: 28px;
+}
+
+.user-details {
+  flex: 1;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.user-email {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.user-menu-options {
+  padding: 16px 0;
+}
+
+.menu-option {
+  display: flex;
+  align-items: center;
+  padding: 16px 24px;
+  color: #333;
+  text-decoration: none;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.menu-option:hover {
+  background-color: #f8f8f8;
+}
+
+.menu-option i {
+  width: 24px;
+  height: 24px;
+  margin-right: 16px;
+  color: #666;
+}
+
+.menu-divider {
+  height: 1px;
+  background: #eee;
+  margin: 8px 0;
+}
+
+.logout-btn {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: 16px 24px;
+  color: #e74c3c;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+}
+
+.logout-btn i {
+  color: #e74c3c;
+}
+
+.logout-btn:hover {
+  background-color: #fff5f5;
+}
+
+/* Overlay when menu is open */
+.menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out;
+  z-index: 999;
+}
+
+.menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
 </style>
   <body>
     <header>
@@ -1216,19 +1386,49 @@ a:hover {
               <div class="user-profile" style="display: flex; align-items: center; cursor: pointer;">
                 <i data-feather="user" style="margin-right: 8px;"></i>
                 <span id="userName">{{ user.username }}</span>
-                <div class="profile-dropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 8px; min-width: 150px;">
-                  <div style="padding: 12px; border-bottom: 1px solid #eee;">
-                    <div id="userNameFull" style="font-weight: 500; color: #333;">{{ user.username }}</div>
-                    <div id="userEmail" style="font-size: 0.8rem; color: #666; margin-top: 4px;">{{ user.email }}</div>
+                <!-- <i data-feather="chevron-down" style="margin-left: 8px;"></i> -->
+              </div>
+              <div class="user-menu">
+                <div class="user-menu-header">
+                  <div class="user-info">
+                    <i class="fa-solid fa-user"></i>
+                    <div class="user-details">
+                      <div class="user-name">{{ user.username }}</div>
+                      <div class="user-email">{{ user.email }}</div>
+                    </div>
                   </div>
+                  <button class="close-menu-btn" onclick="closeUserMenu()">
+                    <i class="fas fa-times"></i>
+                  </button>
+                </div>
+                <div class="user-menu-options">
+                  <a href="{% url 'profile' %}" class="menu-option">
+                    <!-- <i class="fa-solid fa-x"></i> -->
+                    <span>My Profile</span>
+                  </a>
+                  <a href="{% url 'order_history' %}" class="menu-option">
+                    <i data-feather="shopping-bag"></i>
+                    <span>Order History</span>
+                  </a>
+                  <a href="{% url 'wishlist' %}" class="menu-option">
+                    <i data-feather="heart"></i>
+                    <span>Wishlist</span>
+                  </a>
+                  <a href="{% url 'vouchers' %}" class="menu-option">
+                    <i data-feather="gift"></i>
+                    <span>Vouchers</span>
+                  </a>
+                  <div class="menu-divider"></div>
                   <form action="{% url 'logout' %}" method="POST" style="margin: 0;">
                     {% csrf_token %}
-                    <button type="submit" style="padding: 12px; color: #e74c3c; cursor: pointer; font-weight: 500; background: none; border: none; width: 100%; text-align: left;">
-                      Logout
+                    <button type="submit" class="menu-option logout-btn">
+                      <i data-feather="log-out"></i>
+                      <span>Sign Out</span>
                     </button>
                   </form>
                 </div>
               </div>
+              <div class="menu-overlay"></div>
             {% else %}
               <a href="{% url 'login' %}" style="text-decoration: none; color: white; cursor: pointer;" id="signInLink">
                 <span>Sign in</span>
@@ -2484,6 +2684,47 @@ a:hover {
       setActive(pickupBtn);
     });
   });
+</script>
+
+<script>
+// ... existing scripts ...
+
+// Add this function to close the menu
+function closeUserMenu() {
+  const userMenu = document.querySelector('.user-menu');
+  const overlay = document.querySelector('.menu-overlay');
+  userMenu.classList.remove('active');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// Update the existing user menu toggle script
+document.addEventListener('DOMContentLoaded', function() {
+  const userProfile = document.querySelector('.user-profile');
+  const userMenu = document.querySelector('.user-menu');
+  const overlay = document.querySelector('.menu-overlay');
+
+  if (userProfile && userMenu && overlay) {
+    userProfile.addEventListener('click', function(e) {
+      e.stopPropagation();
+      userMenu.classList.add('active');
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+
+    // Close menu when clicking overlay
+    overlay.addEventListener('click', function() {
+      closeUserMenu();
+    });
+
+    // Close menu when pressing Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && userMenu.classList.contains('active')) {
+        closeUserMenu();
+      }
+    });
+  }
+});
 </script>
   </body>
   <footer class="footer">
