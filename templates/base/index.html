@@ -1189,6 +1189,7 @@ a:hover {
   z-index: 1000;
   transition: right 0.3s ease-in-out;
   overflow-y: auto;
+  
 }
 
 .user-menu.active {
@@ -1286,6 +1287,12 @@ a:hover {
   text-decoration: none;
   transition: background-color 0.2s;
   cursor: pointer;
+  /* margin-left: 0px; */
+}
+.span{
+  
+  color: #333;
+  margin-left: 0px;
 }
 
 .menu-option:hover {
@@ -1422,7 +1429,7 @@ a:hover {
                 <div class="user-menu-options">
                   <a href="{% url 'profile' %}" class="menu-option">
                     <!-- <i class="fa-solid fa-x"></i> -->
-                    <span>My Profile</span>
+                    <span style="margin-left: 40px ;">My Profile</span>
                   </a>
                   <a href="{% url 'order_history' %}" class="menu-option">
                     <i data-feather="shopping-bag"></i>

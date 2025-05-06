@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MunchExpress</title>
+    <meta name="description" content="MunchExpress - Food Delivery Service" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+      :root {
+    --primary: #f47c2c;
+    --primary-light: #ff9956;
+    --secondary: #8e44ad;
+    --accent: #27ae60;
+    --background: #fafafa;
+    --foreground: #111111;
+    --muted: #f5f5f5;
+    --muted-foreground: #737373;
+    --border: #e5e5e5;
+    --radius: 0.75rem;
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--background);
+    color: var(--foreground);
+    line-height: 1.5;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  ul {
+    list-style: none;
+  }
+  
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+  }
+  
+  /* Header Styles */
+  .header {
+    width: 100%;
+    background: #1a1a1a;
+    position: relative;
+    z-index: 100;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+  }
+  
+  .brand-center {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .logo {
+    height: 40px;
+    width: 40px;
+    object-fit: contain;
+  }
+  
+  .brand-name {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    color: #f8f8f8;
+    letter-spacing: -0.8px;
+    margin-left: -16px;
+  }
+  
+  .header-option {
+    margin-left: auto;
+  }
+  
+  .user-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: #f8f8f8;
+    position: relative;
+    z-index: 102;
+    transition: transform 0.3s;
+  }
+  
+  .user-profile i {
+    font-size: 1.2rem;
+    margin-right: 8px;
+  }
+  
+  .user-profile.shift-left {
+    transform: translateX(-120px);
+  }
+  
+  .user-name {
+    font-size: 0.95rem;
+    display: none;
+  }
+  
+  .sign-in-link {
+    color: #f8f8f8;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius);
+    transition: background-color 0.2s;
+  }
+  
+  .sign-in-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  @media (min-width: 768px) {
+    .user-name {
+      display: inline;
+    }
+  }
+  
+  .avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  
+  /* Sidebar Styles */
+  .user-sidebar {
+    position: fixed;
+    top: 0;
+    right: -16rem;
+    width: 16rem;
+    height: 100%;
+    background: #fff;
+    box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+    z-index: 200;
+    transition: right 0.3s;
+    padding: 1rem;
+  }
+  
+  .user-sidebar.active {
+    right: 0;
+  }
+  
+  .sidebar-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  
+  .user-info .avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+  
+  .user-email {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+  }
+  
+  .close-button {
+    margin-top: 1rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .sidebar-nav {
+    flex: 1;
+    padding: 0.5rem 0;
+    overflow-y: auto;
+  }
+  
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    color: var(--foreground);
+    transition: background-color 0.2s;
+  }
+  
+  .nav-item:hover {
+    background-color: var(--muted);
+  }
+  
+  .nav-item i {
+    width: 1.25rem;
+    text-align: center;
+    color: var(--primary);
+  }
+  
+  .sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  
+  .sidebar-footer .sign-out-button {
+    width: 100%;
+    padding: 0.75rem;
+    background: none;
+    border: none;
+    color: #e74c3c;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: left;
+    transition: background-color 0.2s;
+  }
+  
+  .sidebar-footer .sign-out-button:hover {
+    background-color: rgba(231, 76, 60, 0.1);
+  }
+  
+  /* Overlay */
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 150;
+  }
+  
+  .overlay.active {
+    display: block;
+  }
+  
+  /* Promo Banner */
+  .promo-banner {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .banner-gradient {
+    background: linear-gradient(to right, rgba(244, 124, 44, 0.9), rgba(142, 68, 173, 0.7), rgba(39, 174, 96, 0.9));
+    padding: 4rem 1rem;
+    color: white;
+  }
+  
+  .banner-content {
+    position: relative;
+    z-index: 10;
+    max-width: 32rem;
+  }
+  
+  .banner-content h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  @media (min-width: 768px) {
+    .banner-content h2 {
+      font-size: 2.5rem;
+    }
+  }
+  
+  .banner-content p {
+    font-size: 1.125rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+  }
+  
+  @media (min-width: 768px) {
+    .banner-content p {
+      font-size: 1.25rem;
+    }
+  }
+  
+  .banner-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: var(--radius);
+    transition: all 0.2s;
+  }
+  
+  .btn-primary {
+    background-color: white;
+    color: var(--primary);
+  }
+  
+  .btn-primary:hover {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+  
+  .btn-outline {
+    border: 1px solid white;
+    color: white;
+  }
+  
+  .btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+  
+  .food-icons {
+    position: absolute;
+    right: -1rem;
+    bottom: 0;
+    width: 33%;
+    height: 100%;
+    opacity: 0.2;
+    display: none;
+  }
+  
+  @media (min-width: 768px) {
+    .food-icons {
+      display: block;
+    }
+  }
+  
+  .food-icon {
+    position: absolute;
+    font-size: 1.5rem;
+  }
+  
+  /* Profile Options Section */
+  .profile-options-section {
+    padding: 3rem 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+  }
+  
+  .profile-options-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .profile-options-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .profile-options-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  .profile-option {
+    background-color: white;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s;
+  }
+  
+  .profile-option:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary);
+  }
+  
+  .option-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: var(--muted);
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .option-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+  
+  .option-count {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+  }
+  
+  .option-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    background-color: var(--primary);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.75rem;
+  }
+  
+  .option-title {
+    font-size: 1.125rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+  }
+  
+  .option-description {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    margin-bottom: 1rem;
+  }
+  
+  .option-link {
+    color: var(--primary);
+    font-weight: 500;
+    font-size: 0.875rem;
+  }
+  
+  .option-link:hover {
+    color: var(--primary-light);
+  }
+  
+  /* Footer */
+  .footer {
+    background-color: #111827;
+    color: white;
+    padding: 3rem 1rem 2rem;
+  }
+  
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  @media (min-width: 768px) {
+    .footer-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  .footer h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .footer h4 {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  .footer-column p {
+    color: #9ca3af;
+    margin-bottom: 1rem;
+  }
+  
+  .social-icons {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .social-icons a {
+    color: #9ca3af;
+    transition: color 0.2s;
+  }
+  
+  .social-icons a:hover {
+    color: white;
+  }
+  
+  .footer ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .footer ul a {
+    color: #9ca3af;
+    transition: color 0.2s;
+  }
+  
+  .footer ul a:hover {
+    color: white;
+  }
+  
+  .app-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  
+  .app-button {
+    background-color: white;
+    color: black;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    text-align: center;
+    font-size: 1.125rem;
+  }
+  
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;
+    border-top: 1px solid #374151;
+    color: #9ca3af;
+    font-size: 0.875rem;
+  }
+  
+  @media (min-width: 768px) {
+    .footer-bottom {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  }
+  
+  .footer-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  
+  @media (min-width: 768px) {
+    .footer-links {
+      margin-top: 0;
+    }
+  }
+  
+  .footer-links a {
+    color: #9ca3af;
+    transition: color 0.2s;
+  }
+  
+  .footer-links a:hover {
+    color: white;
+  }
+    </style>
+    
+  </head>
+
+  <body>
+    <div id="root">
+      <header class="header">
+        <div class="header-inner">
+          <div class="brand-center">
+            <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1742133484/1_cyopmr.jpg" alt="MunchExpress Logo" class="logo">
+            <span class="brand-name">unchExpress</span>
+          </div>
+          <div class="header-option" id="authSection">
+            {% if user.is_authenticated %}
+              <div class="user-profile" id="profileToggle">
+                <i class="fa-regular fa-user"></i>
+                <span class="user-name" id="userName">{{ user.username }}</span>
+                <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952" alt="User" class="avatar">
+              </div>
+            {% else %}
+              <a href="{% url 'login' %}" class="sign-in-link" id="signInLink">
+                <span>Sign in</span>
+              </a>
+            {% endif %}
+          </div>
+        </div>
+        <div id="userSidebar" class="user-sidebar">
+          <div class="sidebar-content">
+            <div class="sidebar-header">
+              <div class="user-info">
+                <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952" alt="User" class="avatar">
+                <div>
+                  <p class="user-name" id="userNameFull">{{ user.username }}</p>
+                  <p class="user-email" id="userEmail">{{ user.email }}</p>
+                </div>
+              </div>
+              <button id="closeSidebar" class="close-button">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <nav class="sidebar-nav">
+              <a href="#" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+              </a>
+              <a href="#" class="nav-item">
+                <i class="fas fa-shopping-bag"></i>
+                <span>Order History</span>
+              </a>
+              <a href="#" class="nav-item">
+                <i class="fas fa-gift"></i>
+                <span>Vouchers</span>
+              </a>
+              <a href="#" class="nav-item">
+                <i class="fas fa-heart"></i>
+                <span>Wishlist</span>
+              </a>
+              <a href="#" class="nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>My Reviews</span>
+              </a>
+              <a href="#" class="nav-item">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+              </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+              <form action="{% url 'logout' %}" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="sign-out-button">Sign Out</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div id="overlay" class="overlay"></div>
+      </header>
+
+      <main>
+
+        <div class="promo-banner">
+          <div class="banner-gradient">
+            <div class="container">
+              <div class="banner-content">
+                <h2>Welcome back, {{ user.username }} </h2>
+                <p>Order your favorite meals and get exclusive deals tailored just for you.</p>
+                <div class="banner-buttons">
+                  <button class="btn btn-primary" onclick="location.href='{% url 'index' %}'">Order Now</button>
+                  <button class="btn btn-outline" onclick="location.href='{% url 'index' %}'">Daily Specials</button>
+
+                </div>
+              </div>
+            </div>
+            
+            <div class="food-icons">
+            </div>
+          </div>
+        </div>
+        
+
+        <section class="profile-options-section">
+          <div class="container">
+            <h2 class="section-title">Account Management</h2>
+            <div class="profile-options-grid">
+              
+            </div>
+          </div>
+        </section>
+      </main>
+      
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-grid">
+            <div class="footer-column">
+              <h3>MunchExpress</h3>
+              <p>Delivering deliciousness to your doorstep, one bite at a time.</p>
+              <div class="social-icons">
+                <a href="#"><i class="fab fa-facebook"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+              </div>
+            </div>
+            
+            <div class="footer-column">
+              <h4>Quick Links</h4>
+              <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Menu</a></li>
+                <li><a href="#">Contact</a></li>
+              </ul>
+            </div>
+            
+            <div class="footer-column">
+              <h4>Customer Service</h4>
+              <ul>
+                <li><a href="#">Help & FAQ</a></li>
+                <li><a href="#">Delivery Information</a></li>
+                <li><a href="#">Returns & Refunds</a></li>
+                <li><a href="#">Order Tracking</a></li>
+              </ul>
+            </div>
+            
+            <div class="footer-column">
+              <h4>Download Our App</h4>
+              <p>Get exclusive offers and order on the go!</p>
+              <div class="app-buttons">
+                <a href="#" class="app-button">Google Play</a>
+                <a href="#" class="app-button">App Store</a>
+              </div>
+            </div>
+          </div>
+          
+          <div class="footer-bottom">
+            <p>&copy; <span id="currentYear"></span> MunchExpress. All rights reserved.</p>
+            <div class="footer-links">
+              <a href="#">Privacy Policy</a>
+              <a href="#">Terms of Service</a>
+              <a href="#">Cookie Policy</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <script >
+      const userData = {
+   
+    image: "https://images.unsplash.com/photo-1581092795360-fd1ca04f0952",
+    addresses: { count: "2" },
+    referrals: { count: "5" },
+    payment_methods: { count: "3" },
+    unread_notifications: { count: "4" }
+  };
+  
+  // Profile options data
+  const profileOptions = [
+    {
+      id: 'address',
+      title: 'Manage Addresses',
+      icon: '<i class="fas fa-map-marker-alt"></i>',
+      iconColor: 'var(--primary)',
+      description: 'Add, edit or remove delivery addresses',
+      linkText: 'Manage',
+      count: userData.addresses.count
+    },
+    {
+      id: 'referral',
+      title: 'Referrals',
+      icon: '<i class="fas fa-users"></i>',
+      iconColor: 'var(--secondary)',
+      description: 'Invite friends & earn rewards',
+      linkText: 'Invite',
+      count: userData.referrals.count
+    },
+    {
+      id: 'payment',
+      title: 'Payment Methods',
+      icon: '<i class="fas fa-credit-card"></i>',
+      iconColor: 'var(--accent)',
+      description: 'Add or remove payment methods',
+      linkText: 'Manage',
+      count: userData.payment_methods.count
+    },
+    {
+      id: 'notifications',
+      title: 'Notifications',
+      icon: '<i class="fas fa-bell"></i>',
+      iconColor: 'var(--primary)',
+      description: 'Manage email & push notifications',
+      linkText: 'Settings',
+      badge: userData.unread_notifications.count
+    },
+    {
+      id: 'privacy',
+      title: 'Privacy & Security',
+      icon: '<i class="fas fa-lock"></i>',
+      iconColor: 'var(--secondary)',
+      description: 'Manage your account security',
+      linkText: 'Update',
+    },
+    {
+      id: 'support',
+      title: 'Contact Support',
+      icon: '<i class="fas fa-phone"></i>',
+      iconColor: 'var(--accent)',
+      description: 'Get help with your orders',
+      linkText: 'Contact',
+    }
+  ];
+  
+  // Food emoji array for promo banner
+  const foodEmojis = ['🍕', '🍔', '🍜', '🍣', '🥗', '🍦', '🌮'];
+  
+  // DOM elements
+  const profileToggle = document.getElementById('profileToggle');
+  const closeSidebar = document.getElementById('closeSidebar');
+  const userSidebar = document.getElementById('userSidebar');
+  const overlay = document.getElementById('overlay');
+  const profileOptionsGrid = document.querySelector('.profile-options-grid');
+  const foodIcons = document.querySelector('.food-icons');
+  const currentYearEl = document.getElementById('currentYear');
+  const bannerHeading = document.querySelector('.banner-content h2');
+  const userProfile = document.querySelector('.user-profile');
+  
+  // Update user information
+  document.addEventListener('DOMContentLoaded', () => {
+    // Update welcome message with user's name
+    bannerHeading.textContent = `Welcome back, ${{user.username}}!`;
+    
+    // Set current year in footer
+    currentYearEl.textContent = new Date().getFullYear();
+    
+    // Generate food icons for promo banner
+    generateFoodIcons();
+    
+    // Render profile options
+    renderProfileOptions();
+  });
+  
+  // Toggle sidebar
+  profileToggle.addEventListener('click', () => {
+    userSidebar.classList.add('active');
+    overlay.classList.add('active');
+    userProfile.classList.add('shift-left');
+  });
+  
+  // Close sidebar
+  closeSidebar.addEventListener('click', () => {
+    userSidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    userProfile.classList.remove('shift-left');
+  });
+  
+  // Close sidebar when clicking overlay
+  overlay.addEventListener('click', () => {
+    userSidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    userProfile.classList.remove('shift-left');
+  });
+  
+  // Generate food icons for promo banner
+  function generateFoodIcons() {
+    for (let i = 0; i < 20; i++) {
+      const foodIcon = document.createElement('div');
+      foodIcon.className = 'food-icon';
+      foodIcon.textContent = foodEmojis[Math.floor(Math.random() * foodEmojis.length)];
+      
+      // Random positioning
+      const top = Math.random() * 100;
+      const left = Math.random() * 100;
+      const rotation = Math.random() * 360;
+      
+      foodIcon.style.top = `${top}%`;
+      foodIcon.style.left = `${left}%`;
+      foodIcon.style.transform = `rotate(${rotation}deg)`;
+      
+      foodIcons.appendChild(foodIcon);
+    }
+  }
+  
+  // Render profile options
+  function renderProfileOptions() {
+    profileOptionsGrid.innerHTML = '';
+    
+    profileOptions.forEach(option => {
+      const optionElement = document.createElement('div');
+      optionElement.className = 'profile-option';
+      optionElement.id = `option-${option.id}`;
+      
+      const headerContent = `
+        <div class="option-header">
+          <div class="option-icon" style="color: ${option.iconColor}">
+            ${option.icon}
+          </div>
+          ${option.count ? `<span class="option-count">${option.count} ${parseInt(option.count) === 1 ? 'item' : 'items'}</span>` : ''}
+          ${option.badge ? `<span class="option-badge">${option.badge}</span>` : ''}
+        </div>
+      `;
+      
+      const optionContent = `
+        <h3 class="option-title">${option.title}</h3>
+        <p class="option-description">${option.description}</p>
+        <a href="#" class="option-link">${option.linkText} →</a>
+      `;
+      
+      optionElement.innerHTML = headerContent + optionContent;
+      profileOptionsGrid.appendChild(optionElement);
+    });
+  }
+    </script>
+  </body>
+</html>

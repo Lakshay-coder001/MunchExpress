@@ -88,7 +88,7 @@ from django.shortcuts import render
 
 @login_required(login_url='login')
 def profile(request):
-    return render(request, 'base/profile.html')
+    return render(request, 'base/index_pfp.html')
 @login_required(login_url='login')
 def order_history(request):
     return render(request, 'base/order_history.html')
@@ -97,6 +97,7 @@ def order_history(request):
 def wishlist_view(request):
     return render(request, 'base/wishlist.html')
 
+@login_required(login_url='login')
 def cart(request):
     return render(request, 'base/cart.html', {
         'user': request.user
@@ -105,6 +106,7 @@ def cart(request):
 @login_required(login_url='login')
 def vouchers_view(request):
     return render(request, 'base/vouchers.html')
+
 @login_required(login_url='login')
 def payment(request):
     return render(request, 'base/payment.html', {
