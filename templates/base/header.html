@@ -59,7 +59,7 @@
       <div class="header-option" id="authSection">
         {% if user.is_authenticated %}
           <div class="user-profile" style="display: flex; align-items: center; cursor: pointer;">
-            <i data-feather="user" style="margin-right: 8px;"></i>
+            <i class="fa-regular fa-user" style="margin-right: 8px;"></i>
             <span id="userName">{{ user.username }}</span>
             <div class="profile-dropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 8px; min-width: 150px;">
               <div style="padding: 12px; border-bottom: 1px solid #eee;">

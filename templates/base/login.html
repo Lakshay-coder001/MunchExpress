@@ -453,8 +453,35 @@
         #loginForm,
         #signupForm {
             width: 100%;
-            transition: display 0.3s ease;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
+
+        #loginForm.active,
+        #signupForm.active {
+            display: block;
+            opacity: 1;
+        }
+
+        .form-group {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        #loginForm.active .form-group,
+        #signupForm.active .form-group {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #loginForm.active .form-group:nth-child(1) { transition-delay: 0.1s; }
+        #loginForm.active .form-group:nth-child(2) { transition-delay: 0.2s; }
+        #signupForm.active .form-group:nth-child(1) { transition-delay: 0.1s; }
+        #signupForm.active .form-group:nth-child(2) { transition-delay: 0.2s; }
+        #signupForm.active .form-group:nth-child(3) { transition-delay: 0.3s; }
+        #signupForm.active .form-group:nth-child(4) { transition-delay: 0.4s; }
     </style>
 </head>
 <body>
@@ -532,29 +559,21 @@
             const tabs = document.querySelectorAll('.tab');
             
             if (tab === 'login') {
-                loginForm.style.display = 'block';
-                signupForm.style.display = 'none';
+                loginForm.classList.add('active');
+                signupForm.classList.remove('active');
                 tabs[0].classList.add('active');
                 tabs[1].classList.remove('active');
             } else {
-                loginForm.style.display = 'none';
-                signupForm.style.display = 'block';
+                loginForm.classList.remove('active');
+                signupForm.classList.add('active');
                 tabs[0].classList.remove('active');
                 tabs[1].classList.add('active');
             }
         }
 
-        // Add initial animation when page loads
+        // Initialize the login form as active
         document.addEventListener('DOMContentLoaded', function() {
-            const loginForm = document.getElementById('loginForm');
-            const formGroups = loginForm.querySelectorAll('.form-group');
-            
-            formGroups.forEach(group => {
-                group.style.opacity = '0';
-                setTimeout(() => {
-                    group.style.opacity = '1';
-                }, 100);
-            });
+            switchTab('login');
         });
 
         // Add icons to messages
@@ -601,37 +620,152 @@
                 }, 3500);
             });
         });
-    </script>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async function (e) {
+
+        // Form submission handlers
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-        
+            
             const identifier = document.getElementById('login_identifier').value;
             const password = document.getElementById('password').value;
-        
-            const response = await fetch('/api/login/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    login_identifier: identifier,
-                    password: password
-                })
-            });
-        
-            const data = await response.json();
-        
-            if (response.ok) {
-                alert('Login successful!');
-                localStorage.setItem('access_token', data.access);
-                window.location.href = '/';
-            } else {
-                alert('Login failed: ' + (data.detail || data.error || 'Unknown error'));
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            try {
+                const response = await fetch('/api/login/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        login_identifier: identifier,
+                        password: password
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    // Store tokens and user data
+                    localStorage.setItem('access_token', data.access);
+                    localStorage.setItem('refresh_token', data.refresh);
+                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('email', data.email);
+                    
+                    // Update UI elements
+                    const authSection = document.getElementById('authSection');
+                    if (authSection) {
+                        authSection.innerHTML = `
+                            <div class="user-profile" style="display: flex; align-items: center; cursor: pointer;">
+                                <i class="fa-regular fa-user" style="margin-right: 8px;"></i>
+                                <span id="userName">${data.username}</span>
+                            </div>
+                        `;
+                    }
+                    
+                    window.location.href = '/';
+                } else {
+                    const errorMessage = data.detail || data.error || 'Invalid credentials';
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+                    alertDiv.innerHTML = `
+                        <i class="fas fa-exclamation-circle"></i>
+                        ${errorMessage}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    `;
+                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.tabs'));
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    An error occurred. Please try again.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.tabs'));
             }
         });
-        </script>
-        
+
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const username = document.getElementById('username').value;
+            const password1 = document.getElementById('password1').value;
+            const password2 = document.getElementById('password2').value;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            if (password1 !== password2) {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    Passwords do not match
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.tabs'));
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/signup/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        username: username,
+                        password1: password1,
+                        password2: password2
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    localStorage.setItem('access_token', data.access);
+                    window.location.href = '/';
+                } else {
+                    const errorMessage = data.detail || Object.values(data)[0] || 'Signup failed';
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+                    alertDiv.innerHTML = `
+                        <i class="fas fa-exclamation-circle"></i>
+                        ${errorMessage}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    `;
+                    document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.tabs'));
+                }
+            } catch (error) {
+                console.error('Signup error:', error);
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'alert alert-danger alert-dismissible fade show mt-3';
+                alertDiv.innerHTML = `
+                    <i class="fas fa-exclamation-circle"></i>
+                    An error occurred. Please try again.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+                document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.tabs'));
+            }
+        });
+    </script>
+    <script>
+        // Add initial animation when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.getElementById('loginForm');
+            const formGroups = loginForm.querySelectorAll('.form-group');
+            
+            formGroups.forEach(group => {
+                group.style.opacity = '0';
+                setTimeout(() => {
+                    group.style.opacity = '1';
+                }, 100);
+            });
+        });
+    </script>
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
