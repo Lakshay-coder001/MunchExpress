@@ -135,3 +135,7 @@ def SarwanaBhawan(request):
 #     return render(request, 'base/payment.html')
 
 # view changed
+from django.shortcuts import render
+
+def wishlist_view(request):
+    return render(request, 'base/wishlist.html')
