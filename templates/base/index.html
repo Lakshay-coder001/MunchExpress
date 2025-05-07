@@ -1460,25 +1460,25 @@ a:hover {
                   </button>
                 </div>
                 <div class="user-menu-options">
-                  <a href="{% url 'profile' %}" class="menu-option">
+                  <a href="{% url 'base:profile' %}" class="menu-option">
                     <!-- <i class="fa-solid fa-x"></i> -->
                     <span style="margin-left: 40px ;">My Profile</span>
                   </a>
-                  <a href="{% url 'order_history' %}" class="menu-option">
+                  <a href="{% url 'base:order_history' %}" class="menu-option">
                     <i data-feather="shopping-bag"></i>
                     <span>Order History</span>
                   </a>
-                  <a href="{% url 'wishlist' %}" class="menu-option">
+                  <a href="{% url 'base:wishlist' %}" class="menu-option">
                     <i data-feather="heart"></i>
                     <span>Wishlist</span>
                     <span class="wishlist-count" id="wishlistCount">0</span>
                   </a>
-                  <a href="{% url 'vouchers' %}" class="menu-option">
+                  <a href="{% url 'base:vouchers' %}" class="menu-option">
                     <i data-feather="gift"></i>
                     <span>Vouchers</span>
                   </a>
                   <div class="menu-divider"></div>
-                  <form action="{% url 'logout' %}" method="POST" style="margin: 0;">
+                  <form action="{% url 'base:logout' %}" method="POST" style="margin: 0;">
                     {% csrf_token %}
                     <button type="submit" class="menu-option logout-btn">
                       <i data-feather="log-out"></i>
@@ -1830,7 +1830,7 @@ a:hover {
             </div>
             <div class="text">
               <div class="text-title">
-                <h3><a href="{% url 'TajPalace' %}" style="text-decoration: none; color: inherit;">Taj Palace Restaurant</a></h3>
+                <h3><a href="{% url 'base:TajPalace' %}" style="text-decoration: none; color: inherit;">Taj Palace Restaurant</a></h3>
                 <div class="info">
                   <span><i data-feather="clock"></i> 20-30 MINS</span>
                   <span><i data-feather="tag"></i> ₹500 for two</span>
@@ -1852,7 +1852,7 @@ a:hover {
             </div>
             <div class="text">
               <div class="text-title">
-                <h3><a href="{% url 'PunjabGrill' %}" style="text-decoration: none; color: inherit;">Punjab Grill</a></h3>
+                <h3><a href="{% url 'base:PunjabGrill' %}" style="text-decoration: none; color: inherit;">Punjab Grill</a></h3>
                 <div class="info">
                   <span><i data-feather="clock"></i> 25-35 MINS</span>
                   <span><i data-feather="tag"></i> ₹800 for two</span>
@@ -1874,7 +1874,7 @@ a:hover {
             </div>
             <div class="text">
               <div class="text-title">
-                <h3><a href="{% url 'DosaPlaza' %}" style="text-decoration: none; color: inherit;">Dosa Plaza</a></h3>
+                <h3><a href="{% url 'base:DosaPlaza' %}" style="text-decoration: none; color: inherit;">Dosa Plaza</a></h3>
                 <div class="info">
                   <span><i data-feather="clock"></i> 15-25 MINS</span>
                   <span><i data-feather="tag"></i> ₹300 for two</span>
@@ -1896,7 +1896,7 @@ a:hover {
             </div>
             <div class="text">
               <div class="text-title">
-                <h3><a href="{% url 'BiryaniHouse' %}" style="text-decoration: none; color: inherit;">Biryani House</a></h3>
+                <h3><a href="{% url 'base:BiryaniHouse' %}" style="text-decoration: none; color: inherit;">Biryani House</a></h3>
                 <div class="info">
                   <span><i data-feather="clock"></i> 30-40 MINS</span>
                   <span><i data-feather="tag"></i> ₹600 for two</span>
@@ -1941,7 +1941,7 @@ a:hover {
             </div>
             <div class="text">
               <div class="text-title">
-                <h3><a href="{% url 'MughalsKitchen' %}" style="text-decoration: none; color: inherit;">Mughals Kitchen</a></h3>
+                <h3><a href="{% url 'base:MughalsKitchen' %}" style="text-decoration: none; color: inherit;">Mughals Kitchen</a></h3>
                 <div class="info">
                   <span><i data-feather="clock"></i> 35-45 MINS</span>
                   <span><i data-feather="tag"></i> ₹700 for two</span>
@@ -2374,7 +2374,7 @@ a:hover {
       </div>
     </div>
 
-    <div class="floating-cart" onclick="window.location.href='/cart/';">
+    <div class="floating-cart" onclick="window.location.href=`{% url 'base:cart' %}`;">
       <i data-feather="shopping-cart"></i>
       <div class="cart-count">0</div>
     </div>

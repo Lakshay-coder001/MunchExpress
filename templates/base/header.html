@@ -44,7 +44,7 @@
         <!-- <a href=""><img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744644953/logo-grocery-removebg-preview_shn51y.png" alt="icon" class="icons" style="width: 50px; height: 50px;"></a>
         <span style="font-size: large; font-weight: bold;">/</span>
         <a href=""><img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744644952/logo-delivery-removebg-preview_b57cot.png" alt="icon" class="icons" style="width: 50px; height: 50px;"></a> -->
-        <a href="{% url 'index' %}" class="home-button">
+        <a href="{% url 'base:index' %}" class="home-button">
           <!-- Home icon (SVG) -->
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l9-9 9 9M4 10v10h6v-6h4v6h6V10"></path>
@@ -66,7 +66,7 @@
                 <div id="userNameFull" style="font-weight: 500; color: #333;">{{ user.username }}</div>
                 <div id="userEmail" style="font-size: 0.8rem; color: #666; margin-top: 4px;">{{ user.email }}</div>
               </div>
-              <form action="{% url 'logout' %}" method="POST" style="margin: 0;">
+              <form action="{% url 'base:logout' %}" method="POST" style="margin: 0;">
                 {% csrf_token %}
                 <button type="submit" style="padding: 12px; color: #e74c3c; cursor: pointer; font-weight: 500; background: none; border: none; width: 100%; text-align: left;">
                   Logout
@@ -75,7 +75,7 @@
             </div>
           </div>
         {% else %}
-          <a href="{% url 'login' %}" style="text-decoration: none; color: white; cursor: pointer;" id="signInLink">
+          <a href="{% url 'base:login' %}" style="text-decoration: none; color: white; cursor: pointer;" id="signInLink">
             <span>Sign in</span>
           </a>
         {% endif %}

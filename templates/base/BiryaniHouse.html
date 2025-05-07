@@ -395,7 +395,7 @@ body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: 
     });
     
     function redirectToCart() {
-        window.location.href = "cart.html"; // Redirect to cart page
+        window.location.href = "{% url 'base:cart' %}"; // Redirect to cart page
     }
     
     // Function to add an item to the cart

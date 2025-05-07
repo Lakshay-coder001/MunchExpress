@@ -1404,7 +1404,7 @@
       </div>
       <div class="currentDetails">
         <div class="header-option">
-          <a href="{% url 'index' %}" class="grocery-button">
+          <a href="{% url 'base:index' %}" class="grocery-button">
             <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744644953/logo-grocery-removebg-preview_shn51y.png" alt="icon" class="icons" style="width: 30px; height: 30px;">
             <span>MunchExpress</span>
           </a>
@@ -1423,7 +1423,7 @@
                   <div id="userNameFull" style="font-weight: 500; color: #333;">{{ user.username }}</div>
                   <div id="userEmail" style="font-size: 0.8rem; color: #666; margin-top: 4px;">{{ user.email }}</div>
                 </div>
-                <form action="{% url 'logout' %}" method="POST" style="margin: 0;">
+                <form action="{% url 'base:logout' %}" method="POST" style="margin: 0;">
                   {% csrf_token %}
                   <button type="submit" style="padding: 12px; color: #e74c3c; cursor: pointer; font-weight: 500; background: none; border: none; width: 100%; text-align: left;">
                     Logout

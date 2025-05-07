@@ -817,25 +817,25 @@
                 </button>
               </div>
               <div class="user-menu-options">
-                <a href="{% url 'profile' %}" class="menu-option">
+                <a href="{% url 'base:profile' %}" class="menu-option">
                   <i class="fas fa-user-circle"></i>
                   <span>My Profile</span>
                 </a>
-                <a href="{% url 'order_history' %}" class="menu-option">
+                <a href="{% url 'base:order_history' %}" class="menu-option">
                   <i class="fas fa-shopping-bag"></i>
                   <span>Order History</span>
                 </a>
-                <a href="{% url 'wishlist' %}" class="menu-option">
+                <a href="{% url 'base:wishlist' %}" class="menu-option">
                   <i class="fas fa-heart"></i>
                   <span>Wishlist</span>
                   <span class="wishlist-count" id="wishlistCount">0</span>
                 </a>
-                <a href="{% url 'vouchers' %}" class="menu-option">
+                <a href="{% url 'base:vouchers' %}" class="menu-option">
                   <i class="fas fa-gift"></i>
                   <span>Vouchers</span>
                 </a>
                 <div class="menu-divider"></div>
-                <form action="{% url 'logout' %}" method="POST" style="margin: 0;">
+                <form action="{% url 'base:logout' %}" method="POST" style="margin: 0;">
                   {% csrf_token %}
                   <button type="submit" class="menu-option logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
