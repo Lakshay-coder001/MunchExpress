@@ -4,11 +4,18 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import SignupSerializer, LoginSerializer
+
+
+
 
 def index(request):
-    return render(request, 'base/index.html', {
-        'user': request.user
-    })
+    return render(request, 'base/index.html')
+
 
 def login_view(request):
     if request.user.is_authenticated:
@@ -80,6 +87,45 @@ def signup_view(request):
             
     return render(request, 'base/login.html')
 
+class SignupAPI(APIView):
+    def post(self, request):
+        serializer = SignupSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'message': 'Signup successful'
+            }, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginAPI(APIView):
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
+        if serializer.is_valid():
+            identifier = serializer.validated_data['login_identifier']
+            password = serializer.validated_data['password']
+
+            try:
+                user_obj = User.objects.get(email=identifier)
+                username = user_obj.username
+            except User.DoesNotExist:
+                username = identifier
+
+            user = authenticate(username=username, password=password)
+
+            if user is not None:
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'message': 'Login successful'
+                })
+            return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 def logout_view(request):
     logout(request)
     messages.success(request, 'You have been logged out successfully')
