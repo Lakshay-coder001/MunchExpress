@@ -1,19 +1,5 @@
 from django.urls import path
 from . import views
-from django.urls import path
-from .views import wishlist_view
-
-urlpatterns = [
-    path('wishlist/', wishlist_view, name='wishlist'),
-]
-from django.contrib import admin
-from django.urls import path, include
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('base.urls')),  # Replace 'base' with your app name
-]
-
 
 urlpatterns = [
     # Page Routes
