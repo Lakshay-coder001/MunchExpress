@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>MunchExpress - Food Delivery</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
@@ -1351,7 +1351,40 @@ a:hover {
   opacity: 1;
   visibility: visible;
 }
+.wishlist-count {
+  margin-left: 5px;
+  background: #ff6b6b;
+  color: white;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+.success-message {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-green);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  z-index: 1000;
+  animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+}
 </style>
+  
   <body>
     <header>
       <div class="container">
@@ -1438,6 +1471,7 @@ a:hover {
                   <a href="{% url 'wishlist' %}" class="menu-option">
                     <i data-feather="heart"></i>
                     <span>Wishlist</span>
+                    <span class="wishlist-count" id="wishlistCount">0</span>
                   </a>
                   <a href="{% url 'vouchers' %}" class="menu-option">
                     <i data-feather="gift"></i>
@@ -1574,10 +1608,10 @@ a:hover {
               <div class="price">₹299</div>
               <span class="smallText">North Indian | Curry | Paneer</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Paneer Butter Masala', 299)">
+                <button class="add-to-cart-btn" onclick="addToCart('Paneer Butter Masala', 299, 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Paneer Butter Masala" data-price="299" data-image="https://images.unsplash.com/photo-1631452180519-c014fe946bc7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -1605,10 +1639,10 @@ a:hover {
               <div class="price">₹249</div>
               <span class="smallText">North Indian | Dal | Creamy</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Dal Makhani', 249)">
+                <button class="add-to-cart-btn" onclick="addToCart('Dal Makhani', 249, 'https://www.shutterstock.com/image-photo/yummy-dalmakhani-served-coriander-leaf-600nw-1889883070.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Dal Makhani" data-price="249" data-image="https://www.shutterstock.com/image-photo/yummy-dalmakhani-served-coriander-leaf-600nw-1889883070.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -1636,10 +1670,10 @@ a:hover {
               <div class="price">₹199</div>
               <span class="smallText">South Indian | Breakfast | Crispy</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Masala Dosa', 199)">
+                <button class="add-to-cart-btn" onclick="addToCart('Masala Dosa', 199, 'https://culinarydelightsandbeyond.com/wp-content/uploads/2023/03/dosa-5oF7d_hPJG4-scaled.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Masala Dosa" data-price="199" data-image="https://culinarydelightsandbeyond.com/wp-content/uploads/2023/03/dosa-5oF7d_hPJG4-scaled.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -1667,10 +1701,10 @@ a:hover {
               <div class="price">₹179</div>
               <span class="smallText">Street Food | Mumbai Special</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Pav Bhaji', 179)">
+                <button class="add-to-cart-btn" onclick="addToCart('Pav Bhaji', 179, 'https://assets.bonappetit.com/photos/63cb14735125107865c0fe8f/1713151178965-W30U2J0AYQGRSHBTNSBO/20240331_101819.jpg?format=1000w')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Pav Bhaji" data-price="179" data-image="https://assets.bonappetit.com/photos/63cb14735125107865c0fe8f/1713151178965-W30U2J0AYQGRSHBTNSBO/20240331_101819.jpg?format=1000w">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -1680,7 +1714,7 @@ a:hover {
           <div class="listings-grid-element" data-type="non-veg">
             <div class="image">
               <div class="veg-badge non-veg"></div>
-              <img src="https://glebekitchen.com/wp-content/uploads/2016/12/chickentikkakebab.jpg" />
+              <img src="https://glebekitchen.com/wp-content/uploads/2016/12/chickentikkakebab.jpg" alt="Chicken Tikka" />
             </div>
             <div class="text">
               <div class="text-title">
@@ -1698,10 +1732,10 @@ a:hover {
               <div class="price">₹329</div>
               <span class="smallText">Tandoor | Appetizer | Spicy</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Chicken Tikka', 329)">
+                <button class="add-to-cart-btn" onclick="addToCart('Chicken Tikka', 329, 'https://glebekitchen.com/wp-content/uploads/2016/12/chickentikkakebab.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Chicken Tikka" data-price="329" data-image="https://glebekitchen.com/wp-content/uploads/2016/12/chickentikkakebab.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -1711,7 +1745,7 @@ a:hover {
           <div class="listings-grid-element" data-type="non-veg">
             <div class="image">
               <div class="veg-badge non-veg"></div>
-              <img src="https://www.shutterstock.com/image-photo/deliciously-spiced-chicken-tikka-kabab-600nw-2495838035.jpg" />
+              <img src="https://www.shutterstock.com/image-photo/deliciously-spiced-chicken-tikka-kabab-600nw-2495838035.jpg" alt="Chicken Kebab" />
             </div>
             <div class="text">
               <div class="text-title">
@@ -1729,10 +1763,10 @@ a:hover {
               <div class="price">₹329</div>
               <span class="smallText">Tandoor | Appetizer | Spicy</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Chicken Kebab', 329)">
+                <button class="add-to-cart-btn" onclick="addToCart('Chicken Kebab', 329, 'https://www.shutterstock.com/image-photo/deliciously-spiced-chicken-tikka-kabab-600nw-2495838035.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Chicken Kebab" data-price="329" data-image="https://www.shutterstock.com/image-photo/deliciously-spiced-chicken-tikka-kabab-600nw-2495838035.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -1760,10 +1794,10 @@ a:hover {
               <div class="price">₹399</div>
               <span class="smallText">Bengali | Curry | Seafood</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Fish Curry', 399)">
+                <button class="add-to-cart-btn" onclick="addToCart('Fish Curry', 399, 'https://vismaifood.com/storage/app/uploads/public/287/b6d/6c1/thumb__700_0_0_0_auto.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Fish Curry" data-price="399" data-image="https://vismaifood.com/storage/app/uploads/public/287/b6d/6c1/thumb__700_0_0_0_auto.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -1964,10 +1998,10 @@ a:hover {
               <div class="price">₹149</div>
               <span class="smallText">Dessert | Pure Veg | Sweet</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Chocolate Pastry', 149)">
+                <button class="add-to-cart-btn" onclick="addToCart('Chocolate Pastry', 149, 'https://www.giftacrossindia.com/media/catalog/product/new/GAICAK0331.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Chocolate Pastry" data-price="149" data-image="https://www.giftacrossindia.com/media/catalog/product/new/GAICAK0331.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -1995,10 +2029,10 @@ a:hover {
               <div class="price">₹299</div>
               <span class="smallText">Cake | Pure Veg | Fruity</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Fruit Cake', 299)">
+                <button class="add-to-cart-btn" onclick="addToCart('Fruit Cake', 299, 'https://images.squarespace-cdn.com/content/v1/5e7291c4298b2104067f8dcf/1713151178965-W30U2J0AYQGRSHBTNSBO/20240331_101819.jpg?format=1000w')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Fruit Cake" data-price="299" data-image="https://images.squarespace-cdn.com/content/v1/5e7291c4298b2104067f8dcf/1713151178965-W30U2J0AYQGRSHBTNSBO/20240331_101819.jpg?format=1000w">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2026,10 +2060,10 @@ a:hover {
               <div class="price">₹199</div>
               <span class="smallText">Cookies | Pure Veg | Crunchy</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Butter Cookies', 199)">
+                <button class="add-to-cart-btn" onclick="addToCart('Butter Cookies', 199, 'https://butternutbakeryblog.com/wp-content/uploads/2021/04/lemon-bar-butter-cookies.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Butter Cookies" data-price="199" data-image="https://butternutbakeryblog.com/wp-content/uploads/2021/04/lemon-bar-butter-cookies.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2057,10 +2091,10 @@ a:hover {
               <div class="price">₹129</div>
               <span class="smallText">Snacks | Non-Veg | Hot</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Chicken Puff', 129)">
+                <button class="add-to-cart-btn" onclick="addToCart('Chicken Puff', 129, 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgREQBKw2znu93C60JJ37YOqHFSMpcOKyhOHlLbhpiLhqFhHcDfO_Ov6qhCmPZOKIEr7f-aRZCGRUTojxozpXEbeb-iIrrAjMLqOYrvtD_428eIVcbmbJO4ROav2l27-zG-ZiBmAObnf-w/s1600/chicken+puffs.JPG')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Chicken Puff" data-price="129" data-image="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgREQBKw2znu93C60JJ37YOqHFSMpcOKyhOHlLbhpiLhqFhHcDfO_Ov6qhCmPZOKIEr7f-aRZCGRUTojxozpXEbeb-iIrrAjMLqOYrvtD_428eIVcbmbJO4ROav2l27-zG-ZiBmAObnf-w/s1600/chicken+puffs.JPG">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2088,10 +2122,10 @@ a:hover {
               <div class="price">₹99</div>
               <span class="smallText">Snacks | Non-Veg | Hot</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Egg Puff', 99)">
+                <button class="add-to-cart-btn" onclick="addToCart('Egg Puff', 99, 'https://i.ytimg.com/vi/l4Zh36vBd28/maxresdefault.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Egg Puff" data-price="99" data-image="https://i.ytimg.com/vi/l4Zh36vBd28/maxresdefault.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2119,10 +2153,10 @@ a:hover {
               <div class="price">₹149</div>
               <span class="smallText">Snacks | Non-Veg | Spicy</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Chicken Roll', 149)">
+                <button class="add-to-cart-btn" onclick="addToCart('Chicken Roll', 149, 'https://www.licious.in/blog/wp-content/uploads/2022/12/Shutterstock_2132499279.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Chicken Roll" data-price="149" data-image="https://www.licious.in/blog/wp-content/uploads/2022/12/Shutterstock_2132499279.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2170,10 +2204,10 @@ a:hover {
               <div class="price">₹399</div>
               <span class="smallText">Pizza | Pure Veg | Cheese</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Veggie Supreme Pizza', 399)">
+                <button class="add-to-cart-btn" onclick="addToCart('Veggie Supreme Pizza', 399, 'https://t3.ftcdn.net/jpg/00/27/57/96/360_F_27579652_tM7V4fZBBw8RLmZo0Bi8WhtO2EosTRFD.jpg')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Veggie Supreme Pizza" data-price="399" data-image="https://t3.ftcdn.net/jpg/00/27/57/96/360_F_27579652_tM7V4fZBBw8RLmZo0Bi8WhtO2EosTRFD.jpg">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2201,10 +2235,10 @@ a:hover {
               <div class="price">₹149</div>
               <span class="smallText">Burger | Pure Veg | Crispy</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Crispy Veg Burger', 149)">
+                <button class="add-to-cart-btn" onclick="addToCart('Crispy Veg Burger', 149, 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Crispy Veg Burger" data-price="149" data-image="https://images.unsplash.com/photo-1551782450-a2132b4ba21d">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2232,10 +2266,10 @@ a:hover {
               <div class="price">₹129</div>
               <span class="smallText">Fries | Pure Veg | Crispy</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Loaded French Fries', 129)">
+                <button class="add-to-cart-btn" onclick="addToCart('Loaded French Fries', 129, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDECJqFHDD8AqCC7WpopwFTyaCSEN5X2bQnA&s')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Loaded French Fries" data-price="129" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDECJqFHDD8AqCC7WpopwFTyaCSEN5X2bQnA&s">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2263,10 +2297,10 @@ a:hover {
               <div class="price">₹449</div>
               <span class="smallText">Pizza | Non-Veg | Spicy</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('BBQ Chicken Pizza', 449)">
+                <button class="add-to-cart-btn" onclick="addToCart('BBQ Chicken Pizza', 449, 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="BBQ Chicken Pizza" data-price="449" data-image="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2294,10 +2328,10 @@ a:hover {
               <div class="price">₹199</div>
               <span class="smallText">Burger | Non-Veg | Grilled</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Chicken Burger', 199)">
+                <button class="add-to-cart-btn" onclick="addToCart('Chicken Burger', 199, 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Chicken Burger" data-price="199" data-image="https://images.unsplash.com/photo-1568901346375-23c9450c58cd">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2308,6 +2342,8 @@ a:hover {
             <div class="image">
               <div class="veg-badge non-veg"></div>
               <img src="https://images.unsplash.com/photo-1562967914-608f82629710" alt="Chicken Wings" />
+            </div>
+              alt="Chicken Wings" />
             </div>
             <div class="text">
               <div class="text-title">
@@ -2325,10 +2361,10 @@ a:hover {
               <div class="price">₹349</div>
               <span class="smallText">Wings | Non-Veg | Hot</span>
               <div style="display: flex; gap: 0.5rem;">
-                <button class="add-to-cart-btn" onclick="addToCart('Spicy Chicken Wings', 349)">
+                <button class="add-to-cart-btn" onclick="addToCart('Spicy Chicken Wings', 349, 'https://images.unsplash.com/photo-1562967914-608f82629710')">
                   <i data-feather="shopping-cart"></i> Add to Cart
                 </button>
-                <button class="add-to-wishlist-btn">
+                <button class="add-to-wishlist-btn" data-name="Spicy Chicken Wings" data-price="349" data-image="https://images.unsplash.com/photo-1562967914-608f82629710">
                   <i data-feather="heart"></i> Add to Wishlist
                 </button>
               </div>
@@ -2585,6 +2621,15 @@ a:hover {
         }
       }
 
+      // Handle search keyup event
+      function handleSearchKeyup(event) {
+        if (event.key === 'Enter') {
+          handleSearchClick();
+        } else {
+          debouncedSearch(event);
+        }
+      }
+
       // Select location
       function selectLocation(locationName, lat, lon) {
         currentLocation.textContent = locationName;
@@ -2745,7 +2790,7 @@ a:hover {
     }
 
     // Add to cart functionality
-    function addToCart(name, price, image, button) {
+    function addToCart(name, price, image) {
         // Get the current cart from local storage or initialize an empty array
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         
@@ -2851,6 +2896,161 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 });
+</script>
+<script>
+  // Fixed wishlist functionality
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize wishlist buttons
+    initializeWishlistButtons();
+    
+    // Update wishlist count
+    updateWishlistCount();
+    
+    // Add event listeners to all wishlist buttons
+    document.querySelectorAll('.add-to-wishlist-btn').forEach(button => {
+      button.addEventListener('click', function() {
+        const name = this.getAttribute('data-name');
+        const price = parseInt(this.getAttribute('data-price'));
+        const image = this.getAttribute('data-image');
+        
+        toggleWishlistItem(name, price, image, this);
+      });
+    });
+    
+    // Add scroll functionality for listings
+    const scrollArrows = document.querySelectorAll('.scroll-arrow');
+    scrollArrows.forEach(arrow => {
+      arrow.addEventListener('click', function() {
+        const listingsGrid = this.closest('.listings').querySelector('.listings-grid');
+        const scrollAmount = 900; // Adjust scroll amount as needed
+        
+        if (this.classList.contains('left')) {
+          listingsGrid.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        } else {
+          listingsGrid.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        }
+        
+        // Update arrow visibility after scrolling
+        setTimeout(() => {
+          updateScrollArrows(listingsGrid);
+        }, 300);
+      });
+    });
+    
+    // Initialize scroll arrows for all listing grids
+    document.querySelectorAll('.listings-grid').forEach(grid => {
+      // Add scroll event listener
+      grid.addEventListener('scroll', function() {
+        updateScrollArrows(this);
+      });
+      
+      // Initial update
+      updateScrollArrows(grid);
+    });
+  });
+  
+  // Toggle wishlist item (add or remove)
+  function toggleWishlistItem(name, price, image, button) {
+    // Get current wishlist
+    let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    
+    // Check if item exists in wishlist
+    const itemIndex = wishlist.findIndex(item => item.name === name);
+    
+    if (itemIndex === -1) {
+      // Add to wishlist
+      wishlist.push({
+        name: name,
+        price: price,
+        image: image
+      });
+      
+      // Update button appearance
+      button.innerHTML = '<i data-feather="heart" style="fill: red; stroke: red;"></i> In Wishlist';
+      button.style.backgroundColor = '#e74c3c';
+      
+      // Show success message
+      showMessage(`${name} added to wishlist!`);
+    } else {
+      // Remove from wishlist
+      wishlist.splice(itemIndex, 1);
+      
+      // Update button appearance
+      button.innerHTML = '<i data-feather="heart"></i> Add to Wishlist';
+      button.style.backgroundColor = '#ff6b6b';
+      
+      // Show success message
+      showMessage(`${name} removed from wishlist!`);
+    }
+    
+    // Save updated wishlist
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    
+    // Update wishlist count
+    updateWishlistCount();
+    
+    // Re-initialize feather icons
+    feather.replace();
+  }
+  
+  // Initialize wishlist buttons based on current wishlist
+  function initializeWishlistButtons() {
+    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    
+    document.querySelectorAll('.add-to-wishlist-btn').forEach(button => {
+      const name = button.getAttribute('data-name');
+      
+      // Check if item is in wishlist
+      const isInWishlist = wishlist.some(item => item.name === name);
+      
+      if (isInWishlist) {
+        button.innerHTML = '<i data-feather="heart" style="fill: red; stroke: red;"></i> In Wishlist';
+        button.style.backgroundColor = '#e74c3c';
+      } else {
+        button.innerHTML = '<i data-feather="heart"></i> Add to Wishlist';
+      }
+    });
+    
+    // Re-initialize feather icons
+    feather.replace();
+  }
+  
+  // Update wishlist count in UI
+  function updateWishlistCount() {
+    const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+    const wishlistCountElements = document.querySelectorAll('.wishlist-count');
+    
+    wishlistCountElements.forEach(element => {
+      element.textContent = wishlist.length;
+    });
+  }
+  
+  // Show message function
+  function showMessage(text) {
+    const message = document.createElement('div');
+    message.className = 'success-message';
+    message.textContent = text;
+    document.body.appendChild(message);
+    
+    setTimeout(() => {
+      message.remove();
+    }, 2000);
+  }
+  
+  // Update scroll arrows visibility
+  function updateScrollArrows(grid) {
+    const container = grid.closest('.listings');
+    const leftArrow = container.querySelector('.scroll-arrow.left');
+    const rightArrow = container.querySelector('.scroll-arrow.right');
+    
+    // Check if scrolling is possible
+    const canScrollLeft = grid.scrollLeft > 0;
+    const canScrollRight = grid.scrollLeft < (grid.scrollWidth - grid.clientWidth - 10);
+    
+    // Update arrow visibility
+    leftArrow.classList.toggle('disabled', !canScrollLeft);
+    rightArrow.classList.toggle('disabled', !canScrollRight);
+  }
 </script>
   </body>
   <footer class="footer">
