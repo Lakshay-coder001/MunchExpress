@@ -1,14 +1,16 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.http import JsonResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import SignupSerializer, LoginSerializer
+from .models import Restaurant, Item, RestaurantCart, RestaurantOrder, RestaurantOrderItem
 
 
 
@@ -197,3 +199,163 @@ from django.shortcuts import render
 
 def wishlist_view(request):
     return render(request, 'base/wishlist.html')
+
+# Restaurant Views
+def restaurant_list(request):
+    cuisine_type = request.GET.get('cuisine')
+    search_query = request.GET.get('search')
+    
+    restaurants = Restaurant.objects.filter(is_active=True)
+    
+    if cuisine_type:
+        restaurants = restaurants.filter(cuisine_type=cuisine_type)
+    if search_query:
+        restaurants = restaurants.filter(name__icontains=search_query)
+    
+    context = {
+        'restaurants': restaurants,
+        'cuisine_types': Restaurant._meta.get_field('cuisine_type').choices,
+        'current_cuisine': cuisine_type,
+        'search_query': search_query,
+    }
+    return render(request, 'base/restaurant_list.html', context)
+
+def restaurant_detail(request, restaurant_id):
+    restaurant = get_object_or_404(Restaurant, id=restaurant_id, is_active=True)
+    items = restaurant.items.filter(is_available=True)
+    
+    category = request.GET.get('category')
+    if category:
+        items = items.filter(category=category)
+    
+    context = {
+        'restaurant': restaurant,
+        'items': items,
+        'categories': Item._meta.get_field('category').choices,
+        'current_category': category,
+    }
+    return render(request, 'base/restaurant_detail.html', context)
+
+@login_required
+def add_to_restaurant_cart(request, item_id):
+    if request.method == 'POST':
+        quantity = int(request.POST.get('quantity', 1))
+        
+        try:
+            item = Item.objects.get(id=item_id, is_available=True)
+            cart_item, created = RestaurantCart.objects.get_or_create(
+                user=request.user,
+                item=item,
+                defaults={'quantity': quantity}
+            )
+            
+            if not created:
+                cart_item.quantity = quantity
+                cart_item.save()
+            
+            messages.success(request, f'{item.name} added to cart successfully!')
+        except Item.DoesNotExist:
+            messages.error(request, 'Item not available.')
+        except Exception as e:
+            messages.error(request, f'Error adding item to cart: {str(e)}')
+        
+        return redirect('base:restaurant_detail', restaurant_id=item.restaurant.id)
+    
+    return redirect('base:restaurant_list')
+
+@login_required
+def restaurant_cart(request):
+    cart_items = RestaurantCart.objects.filter(user=request.user)
+    total_amount = sum(item.total for item in cart_items)
+    
+    context = {
+        'cart_items': cart_items,
+        'total_amount': total_amount,
+    }
+    return render(request, 'base/restaurant_cart.html', context)
+
+@login_required
+def remove_from_restaurant_cart(request, item_id):
+    try:
+        cart_item = RestaurantCart.objects.get(id=item_id, user=request.user)
+        cart_item.delete()
+        messages.success(request, 'Item removed from cart successfully!')
+    except RestaurantCart.DoesNotExist:
+        messages.error(request, 'Item not found in cart.')
+    except Exception as e:
+        messages.error(request, f'Error removing item from cart: {str(e)}')
+    
+    return redirect('base:restaurant_cart')
+
+@login_required
+def restaurant_checkout(request):
+    cart_items = RestaurantCart.objects.filter(user=request.user)
+    
+    if not cart_items.exists():
+        messages.warning(request, 'Your cart is empty!')
+        return redirect('base:restaurant_list')
+    
+    try:
+        # Get the restaurant from the first item (assuming all items are from the same restaurant)
+        restaurant = cart_items.first().item.restaurant
+        
+        # Create the order
+        order = RestaurantOrder.objects.create(
+            user=request.user,
+            restaurant=restaurant,
+            total_amount=sum(item.total for item in cart_items),
+            delivery_address=request.user.user_info.address if hasattr(request.user, 'user_info') else ''
+        )
+        
+        # Create order items
+        for cart_item in cart_items:
+            RestaurantOrderItem.objects.create(
+                order=order,
+                item=cart_item.item,
+                quantity=cart_item.quantity,
+                price_at_time=cart_item.item.price
+            )
+        
+        # Clear the cart
+        cart_items.delete()
+        
+        messages.success(request, 'Order placed successfully!')
+        return redirect('base:restaurant_order_history')
+    
+    except Exception as e:
+        messages.error(request, f'Error during checkout: {str(e)}')
+        return redirect('base:restaurant_cart')
+
+@login_required
+def restaurant_order_history(request):
+    orders = RestaurantOrder.objects.filter(user=request.user)
+    context = {
+        'orders': orders,
+    }
+    return render(request, 'base/restaurant_order_history.html', context)
+
+def search_restaurants(request):
+    query = request.GET.get('q', '')
+    if query:
+        restaurants = Restaurant.objects.filter(
+            is_active=True
+        ).filter(
+            name__icontains=query
+        ) | Restaurant.objects.filter(
+            cuisine_type__icontains=query
+        )
+    else:
+        restaurants = Restaurant.objects.none()
+    
+    return JsonResponse({
+        'restaurants': [
+            {
+                'id': r.id,
+                'name': r.name,
+                'cuisine_type': r.cuisine_type,
+                'rating': float(r.rating),
+                'image': r.image
+            }
+            for r in restaurants[:5]
+        ]
+    })
