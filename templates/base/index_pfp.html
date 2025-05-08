@@ -654,7 +654,7 @@
             </nav>
             
             <div class="sidebar-footer">
-              <form action="{% url 'logout' %}" method="POST">
+              <form action="{% url 'base:logout' %}" method="POST">
                 {% csrf_token %}
                 <button type="submit" class="sign-out-button">Sign Out</button>
               </form>
@@ -673,8 +673,8 @@
                 <h2>Welcome back, {{ user.username }} </h2>
                 <p>Order your favorite meals and get exclusive deals tailored just for you.</p>
                 <div class="banner-buttons">
-                  <button class="btn btn-primary" onclick="location.href='{% url 'index' %}'">Order Now</button>
-                  <button class="btn btn-outline" onclick="location.href='{% url 'index' %}'">Daily Specials</button>
+                  <button class="btn btn-primary" onclick="location.href=`{% url 'base:index' %}`">Order Now</button>
+                  <button class="btn btn-outline" onclick="location.href=`{% url 'base:index' %}`">Daily Specials</button>
 
                 </div>
               </div>
@@ -833,7 +833,7 @@
   // Update user information
   document.addEventListener('DOMContentLoaded', () => {
     // Update welcome message with user's name
-    bannerHeading.textContent = `Welcome back, ${{user.username}}!`;
+    bannerHeading.textContent = `Welcome back, ${user.username}!`;
     
     // Set current year in footer
     currentYearEl.textContent = new Date().getFullYear();

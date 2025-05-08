@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator, RegexValidator
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from decimal import Decimal
 
 class Restaurant(models.Model):
@@ -29,7 +29,7 @@ class Restaurant(models.Model):
     rating = models.DecimalField(
         max_digits=3,
         decimal_places=1,
-        validators=[MinValueValidator(Decimal('0.0')), MinValueValidator(Decimal('5.0'))],
+        validators=[MinValueValidator(Decimal('0.0')), MaxValueValidator(Decimal('5.0'))],
         default=0.0
     )
     image = models.URLField(max_length=200, blank=True)
