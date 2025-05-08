@@ -1,0 +1,919 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishlist - MunchMart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+          --font-family: 'Poppins', sans-serif;
+          font-size: 16px;
+          --color-green: #3F7408;
+          --color-grey: rgb(238, 238, 238);
+          --color-greyDarker: rgb(84, 84, 84);
+        }
+        
+        * {
+          box-sizing: border-box;
+          margin: 0;
+          padding: 0;
+        }
+        
+        body {
+          font-family: var(--font-family);
+          background-color: #f8f8f8;
+          color: #333;
+        }
+        
+        .container {
+          width: 100%;
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 0 20px;
+          position: relative;
+        }
+        
+        header {
+          background-color: #DDD0C8;
+          padding: 1rem 0;
+          position: fixed;
+          width: 100%;
+          top: 0;
+          z-index: 1000;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        header .container {
+          display: flex;
+          align-items: center;
+        }
+        
+        header .logo-container {
+          position: relative;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          margin-left: 10px;
+        }
+        
+        header .logo {
+          height: 100%;
+          width: 50px;
+          object-fit: contain;
+          z-index: 0;
+        }
+        
+        header .brand-name {
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 800;
+          font-size: 28px;
+          letter-spacing: -0.8px;
+          color: #323232;
+          margin-left: -9px;
+          position: relative;
+          z-index: 2;
+        }
+        
+        header .searchBar {
+          margin-left: auto;
+          position: relative;
+        }
+        
+        header .searchBar .search-input {
+          background: rgba(255, 255, 255, 0.3);
+          border: 1px solid rgba(0,0,0,0.1);
+          padding: 0.5rem 1rem;
+          border-radius: 40px;
+          color: rgb(16, 16, 16);
+          font-size: 1rem;
+          width: 300px;
+          transition: all 0.3s ease;
+        }
+        
+        header .searchBar .search-input:focus {
+          outline: none;
+          background: rgba(255, 255, 255, 0.5);
+          border-color: var(--color-green);
+        }
+        
+        header .searchBar .search-input::placeholder {
+          color: #323232;
+        }
+        
+        header .header-option {
+          padding-left: 2rem;
+          letter-spacing: 0.6px;
+          display: flex;
+          align-items: center;
+          color: #323232;
+          position: relative;
+        }
+        
+        header .currentDetails {
+          display: flex;
+          align-items: center;
+        }
+        
+        header .searchBar {
+          display: flex;
+        }
+        
+        .grocery-button {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          margin-right: 40px;
+          background-color: rgba(255, 255, 255, 0.1);
+          color: #323232;
+          padding: 10px 16px;
+          border: 1px;
+          border-radius: 6px;
+          cursor: pointer;
+          transition: box-shadow 0.3s ease;
+          text-decoration: none;
+        }
+        
+        .grocery-button:hover {
+          box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+        }
+        
+        .grocery-text {
+          font-size: 14px;
+          font-weight: 500;
+          text-decoration: none;
+        }
+        
+        /* Main content styles */
+        .main-content {
+          margin-top: 80px;
+          padding: 40px 0;
+          min-height: calc(100vh - 80px - 300px); /* Adjust for header and footer */
+        }
+        
+        .page-title {
+          margin-bottom: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        
+        .page-title h1 {
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+          font-size: 32px;
+          color: #333;
+          margin: 0;
+        }
+        
+        .page-title .subtitle {
+          color: var(--color-greyDarker);
+          font-size: 16px;
+          margin-top: 8px;
+        }
+        
+        /* Wishlist grid */
+        .wishlist-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+          gap: 25px;
+          margin-bottom: 40px;
+        }
+        
+        .wishlist-item {
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+          overflow: hidden;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          position: relative;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .wishlist-item:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        
+        .wishlist-item .image {
+          height: 180px;
+          position: relative;
+        }
+        
+        .wishlist-item .image img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        
+        .wishlist-item .food-type-indicator {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 20px;
+          height: 20px;
+          border-radius: 4px;
+          border: 2px solid;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 5;
+        }
+        
+        .wishlist-item .food-type-indicator.veg {
+          border-color: var(--color-green);
+        }
+        
+        .wishlist-item .food-type-indicator.veg::after {
+          content: '';
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: var(--color-green);
+        }
+        
+        .wishlist-item .food-type-indicator.non-veg {
+          border-color: #e74c3c;
+        }
+        
+        .wishlist-item .food-type-indicator.non-veg::after {
+          content: '';
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: #e74c3c;
+        }
+        
+        .wishlist-item .content {
+          padding: 16px;
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+        }
+        
+        .wishlist-item .item-title {
+          font-weight: 600;
+          font-size: 18px;
+          margin: 0 0 8px 0;
+          color: #333;
+        }
+        
+        .wishlist-item .item-price {
+          font-size: 18px;
+          font-weight: 600;
+          color: var(--color-green);
+          margin-bottom: 12px;
+        }
+        
+        .wishlist-item .item-category {
+          color: var(--color-greyDarker);
+          font-size: 14px;
+          margin-bottom: 16px;
+          line-height: 1.4;
+        }
+        
+        .wishlist-item .action-buttons {
+          display: flex;
+          gap: 10px;
+          margin-top: auto;
+        }
+        
+        .btn {
+          padding: 10px 16px;
+          border-radius: 6px;
+          border: none;
+          font-weight: 500;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          transition: all 0.2s ease;
+          flex: 1;
+        }
+        
+        .btn-primary {
+          background-color: var(--color-green);
+          color: white;
+        }
+        
+        .btn-primary:hover {
+          background-color: #2c5406;
+        }
+        
+        .btn-secondary {
+          background-color: #f8f8f8;
+          color: #333;
+          border: 1px solid #ddd;
+        }
+        
+        .btn-secondary:hover {
+          background-color: #eee;
+        }
+        
+        .btn-danger {
+          background-color: #ff6b6b;
+          color: white;
+        }
+        
+        .btn-danger:hover {
+          background-color: #e74c3c;
+        }
+        
+        /* Empty wishlist state */
+        .empty-wishlist {
+          text-align: center;
+          padding: 60px 20px;
+          background: white;
+          border-radius: 12px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .empty-wishlist i {
+          font-size: 60px;
+          color: #ddd;
+          margin-bottom: 20px;
+        }
+        
+        .empty-wishlist h2 {
+          font-family: 'Montserrat', sans-serif;
+          font-weight: 700;
+          font-size: 24px;
+          color: #333;
+          margin-bottom: 10px;
+        }
+        
+        .empty-wishlist p {
+          color: var(--color-greyDarker);
+          margin-bottom: 30px;
+          font-size: 16px;
+        }
+        
+        /* Success message */
+        .success-message {
+          position: fixed;
+          bottom: 20px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: var(--color-green);
+          color: white;
+          padding: 10px 20px;
+          border-radius: 4px;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+          z-index: 1000;
+          animation: fadeInOut 2s ease-in-out;
+        }
+        
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+          20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+          100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        }
+        
+        /* Floating cart */
+        .floating-cart {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          width: 60px;
+          height: 60px;
+          background: var(--color-green);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 24px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          cursor: pointer;
+          transition: transform 0.3s ease;
+          z-index: 100;
+        }
+        
+        .floating-cart:hover {
+          transform: scale(1.1);
+        }
+        
+        .cart-count {
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          background: #ff6b6b;
+          color: white;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 12px;
+          font-weight: 600;
+        }
+        
+        /* Back to home button */
+        .back-button {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          background: none;
+          border: none;
+          color: var(--color-greyDarker);
+          font-size: 16px;
+          cursor: pointer;
+          padding: 0;
+          margin-bottom: 20px;
+          transition: color 0.2s ease;
+        }
+        
+        .back-button:hover {
+          color: #333;
+        }
+        
+        .back-button i {
+          font-size: 18px;
+        }
+        
+        /* Footer styles */
+        .footer {
+          background: #333;
+          color: white;
+          padding: 40px 0 20px;
+          margin-top: 40px;
+        }
+        
+        .footer-content {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 30px;
+        }
+        
+        .footer-section h3 {
+          margin-bottom: 15px;
+          font-weight: 600;
+        }
+        
+        .footer-section ul {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+        
+        .footer-section ul li {
+          margin-bottom: 10px;
+        }
+        
+        .footer-section ul li a {
+          color: #ccc;
+          text-decoration: none;
+          transition: color 0.2s ease;
+        }
+        
+        .footer-section ul li a:hover {
+          color: white;
+        }
+        
+        .social-links {
+          display: flex;
+          gap: 15px;
+          margin-top: 15px;
+        }
+        
+        .social-links a {
+          color: white;
+          font-size: 18px;
+        }
+        
+        .footer-bottom {
+          margin-top: 30px;
+          padding-top: 20px;
+          border-top: 1px solid #444;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        
+        .payment-methods {
+          display: flex;
+          gap: 10px;
+          font-size: 24px;
+        }
+        
+        /* Toast notification */
+        #toast-notification {
+          position: fixed;
+          bottom: 100px;
+          right: 30px;
+          background-color: var(--color-green);
+          color: white;
+          padding: 12px 20px;
+          border-radius: 4px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+          z-index: 1000;
+          transition: opacity 0.3s ease;
+          opacity: 0;
+          pointer-events: none;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+          .container {
+            padding: 0 20px;
+          }
+          
+          .wishlist-grid {
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+          }
+          
+          header .header-option {
+            padding-left: 1rem;
+          }
+          
+          header .searchBar .search-input {
+            width: 200px;
+          }
+        }
+        
+        @media (max-width: 576px) {
+          .wishlist-grid {
+            grid-template-columns: 1fr;
+          }
+          
+          .page-title {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+          
+          .page-title .actions {
+            margin-top: 15px;
+          }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo-container">
+                <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744695036/ChatGPT_Image_Apr_15_2025_10_59_50_AM_gwg1sd.png" alt="MunchMart Logo" class="logo">
+                <div class="brand-name">unchMart</div>
+            </div>
+            <div class="currentDetails">
+                <div class="header-option">
+                    <a href="{% url 'base:index' %}" class="grocery-button">
+                        <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744644953/logo-grocery-removebg-preview_shn51y.png" alt="icon" class="icons" style="width: 30px; height: 30px;">
+                        <span>MunchExpress</span>
+                    </a>
+                </div>
+            </div>
+            <div class="searchBar">
+                <input type="text" class="search-input" placeholder="Search for your daily needs..." />
+                <div class="header-option" id="authSection">
+                    {% if user.is_authenticated %}
+                        <div class="user-profile" style="display: flex; align-items: center; cursor: pointer;">
+                            <i class="fa-regular fa-user" style="margin-right: 8px;"></i>
+                            <span id="userName">{{ user.username }}</span>
+                            <div class="profile-dropdown" style="display: none; position: absolute; top: 100%; right: 0; background: white; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-top: 8px; min-width: 150px;">
+                                <div style="padding: 12px; border-bottom: 1px solid #eee;">
+                                    <div id="userNameFull" style="font-weight: 500; color: #333;">{{ user.username }}</div>
+                                    <div id="userEmail" style="font-size: 0.8rem; color: #666; margin-top: 4px;">{{ user.email }}</div>
+                                </div>
+                                <form action="{% url 'base:logout' %}" method="POST" style="margin: 0;">
+                                    {% csrf_token %}
+                                    <button type="submit" style="padding: 12px; color: #e74c3c; cursor: pointer; font-weight: 500; background: none; border: none; width: 100%; text-align: left;">
+                                        Logout
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'base:login' %}" style="text-decoration: none; color: #333; cursor: pointer;" id="signInLink">
+                            <span>Sign in</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-content">
+        <div class="container">
+            <button class="back-button" onclick="window.location.href='{% url 'munchmart:index' %}'">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </button>
+            
+            <div class="page-title">
+                <div>
+                    <h1>My Wishlist</h1>
+                    <div class="subtitle">Items you've saved for later</div>
+                </div>
+                <div class="actions">
+                    <button id="clearWishlistBtn" class="btn btn-secondary">
+                        <i class="fas fa-trash-alt"></i> Clear Wishlist
+                    </button>
+                </div>
+            </div>
+
+            <div id="wishlistContainer">
+                <!-- Wishlist items will be loaded here via JavaScript -->
+                <div class="empty-wishlist" id="emptyWishlistMessage" style="display: none;">
+                    <i class="fas fa-heart-broken"></i>
+                    <h2>Your wishlist is empty</h2>
+                    <p>Add items to your wishlist to save them for later</p>
+                    <a href="{% url 'munchmart:index' %}" class="btn btn-primary">
+                        <i class="fas fa-arrow-left"></i> Continue Shopping
+                    </a>
+                </div>
+                
+                <div class="wishlist-grid" id="wishlistGrid">
+                    <!-- Wishlist items will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="floating-cart" onclick="window.location.href='{% url 'munchmart:cart' %}';">
+        <i class="fas fa-shopping-cart"></i>
+        <div class="cart-count" id="cartCount">0</div>
+    </div>
+
+    <div id="toast-notification"></div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>MunchMart</h3>
+                    <p>Fresh groceries delivered to your doorstep in minutes.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="{% url 'munchmart:index' %}">Home</a></li>
+                        <li><a href="#">Products</a></li>
+                        <li><a href="#">Offers</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Customer Service</h3>
+                    <ul>
+                        <li><a href="#">My Account</a></li>
+                        <li><a href="#">Order Tracking</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Grocery Street, Food City</p>
+                    <p><i class="fas fa-phone"></i> +91 9876543210</p>
+                    <p><i class="fas fa-envelope"></i> support@munchmart.com</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 MunchMart. All rights reserved.</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                    <i class="fab fa-cc-amazon-pay"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize wishlist
+            loadWishlistItems();
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Add event listener for clear wishlist button
+            document.getElementById('clearWishlistBtn').addEventListener('click', clearWishlist);
+            
+            // User profile dropdown
+            const userProfile = document.querySelector('.user-profile');
+            const profileDropdown = document.querySelector('.profile-dropdown');
+
+            if (userProfile && profileDropdown) {
+                userProfile.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
+                });
+
+                document.addEventListener('click', function() {
+                    profileDropdown.style.display = 'none';
+                });
+            }
+        });
+        
+        // Load wishlist items from localStorage
+        function loadWishlistItems() {
+            const wishlist = JSON.parse(localStorage.getItem('munchmart_wishlist')) || [];
+            const wishlistGrid = document.getElementById('wishlistGrid');
+            const emptyWishlistMessage = document.getElementById('emptyWishlistMessage');
+            
+            // Check if wishlist is empty
+            if (wishlist.length === 0) {
+                wishlistGrid.style.display = 'none';
+                emptyWishlistMessage.style.display = 'block';
+                document.getElementById('clearWishlistBtn').style.display = 'none';
+                return;
+            }
+            
+            // Show wishlist grid and hide empty message
+            wishlistGrid.style.display = 'grid';
+            emptyWishlistMessage.style.display = 'none';
+            document.getElementById('clearWishlistBtn').style.display = 'block';
+            
+            // Clear existing items
+            wishlistGrid.innerHTML = '';
+            
+            // Add each item to the grid
+            wishlist.forEach(item => {
+                const itemElement = createWishlistItemElement(item);
+                wishlistGrid.appendChild(itemElement);
+            });
+        }
+        
+        // Create HTML element for a wishlist item
+        function createWishlistItemElement(item) {
+            const itemElement = document.createElement('div');
+            itemElement.className = 'wishlist-item';
+            
+            // Determine if item is veg or non-veg (based on type)
+            const isVeg = item.type === 'veg';
+            
+            // Create category text based on item name
+            let categoryText = '';
+            if (item.name.toLowerCase().includes('apple') || item.name.toLowerCase().includes('banana') || 
+                item.name.toLowerCase().includes('orange') || item.name.toLowerCase().includes('vegetable')) {
+                categoryText = 'Fruits & Vegetables | ' + (isVeg ? 'Vegetarian' : 'Non-Vegetarian');
+            } else if (item.name.toLowerCase().includes('milk') || item.name.toLowerCase().includes('cheese') || 
+                      item.name.toLowerCase().includes('yogurt') || item.name.toLowerCase().includes('egg')) {
+                categoryText = 'Dairy & Eggs | ' + (isVeg ? 'Vegetarian' : 'Non-Vegetarian');
+            } else if (item.name.toLowerCase().includes('bread') || item.name.toLowerCase().includes('cake') || 
+                      item.name.toLowerCase().includes('cookie') || item.name.toLowerCase().includes('pastry')) {
+                categoryText = 'Bakery | ' + (isVeg ? 'Vegetarian' : 'Non-Vegetarian');
+            } else if (item.name.toLowerCase().includes('chicken') || item.name.toLowerCase().includes('fish') || 
+                      item.name.toLowerCase().includes('meat') || item.name.toLowerCase().includes('mutton')) {
+                categoryText = 'Meat & Fish | Non-Vegetarian';
+            } else if (item.name.toLowerCase().includes('juice') || item.name.toLowerCase().includes('water') || 
+                      item.name.toLowerCase().includes('soda') || item.name.toLowerCase().includes('tea')) {
+                categoryText = 'Beverages | ' + (isVeg ? 'Vegetarian' : 'Non-Vegetarian');
+            } else {
+                categoryText = isVeg ? 'Vegetarian' : 'Non-Vegetarian';
+            }
+            
+            itemElement.innerHTML = `
+                <div class="image">
+                    <div class="food-type-indicator ${isVeg ? 'veg' : 'non-veg'}"></div>
+                    <img src="${item.imageUrl}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/300x200?text=Food+Image'">
+                </div>
+                <div class="content">
+                    <h3 class="item-title">${item.name}</h3>
+                    <div class="item-price">₹${item.price}</div>
+                    <div class="item-category">${categoryText}</div>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary add-to-cart-btn" data-name="${item.name}" data-price="${item.price}" data-image="${item.imageUrl}" data-type="${item.type}">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                        <button class="btn btn-danger remove-btn" data-name="${item.name}">
+                            <i class="fas fa-trash-alt"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add event listeners
+            setTimeout(() => {
+                const addToCartBtn = itemElement.querySelector('.add-to-cart-btn');
+                const removeBtn = itemElement.querySelector('.remove-btn');
+                
+                addToCartBtn.addEventListener('click', function() {
+                    const name = this.getAttribute('data-name');
+                    const price = parseInt(this.getAttribute('data-price'));
+                    const image = this.getAttribute('data-image');
+                    const type = this.getAttribute('data-type');
+                    addToCart(name, price, image, type);
+                });
+                
+                removeBtn.addEventListener('click', function() {
+                    const name = this.getAttribute('data-name');
+                    removeFromWishlist(name);
+                });
+            }, 0);
+            
+            return itemElement;
+        }
+        
+        // Add item to cart
+        function addToCart(name, price, image, type) {
+            // Get current cart
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Check if item already exists in cart
+            const existingItemIndex = cart.findIndex(item => item.name === name);
+            
+            if (existingItemIndex !== -1) {
+                // Increase quantity if item exists
+                cart[existingItemIndex].quantity += 1;
+            } else {
+                // Add new item to cart
+                cart.push({
+                    name: name,
+                    price: price,
+                    imageUrl: image,
+                    quantity: 1,
+                    type: type
+                });
+            }
+            
+            // Save updated cart
+            localStorage.setItem('cart', JSON.stringify(cart));
+            
+            // Update cart count
+            updateCartCount();
+            
+            // Show success message
+            showToast(`${name} added to cart!`);
+        }
+        
+        // Remove item from wishlist
+        function removeFromWishlist(name) {
+            // Get current wishlist
+            let wishlist = JSON.parse(localStorage.getItem('munchmart_wishlist')) || [];
+            
+            // Find item index
+            const itemIndex = wishlist.findIndex(item => item.name === name);
+            
+            if (itemIndex !== -1) {
+                // Remove item
+                wishlist.splice(itemIndex, 1);
+                
+                // Save updated wishlist
+                localStorage.setItem('munchmart_wishlist', JSON.stringify(wishlist));
+                
+                // Reload wishlist items
+                loadWishlistItems();
+                
+                // Show success message
+                showToast(`${name} removed from wishlist!`);
+            }
+        }
+        
+        // Clear entire wishlist
+        function clearWishlist() {
+            if (confirm('Are you sure you want to clear your wishlist?')) {
+                // Clear wishlist in localStorage
+                localStorage.setItem('munchmart_wishlist', JSON.stringify([]));
+                
+                // Reload wishlist items
+                loadWishlistItems();
+                
+                // Show success message
+                showToast('Wishlist cleared!');
+            }
+        }
+        
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartCountElements = document.querySelectorAll('.cart-count');
+            
+            cartCountElements.forEach(element => {
+                element.textContent = totalItems;
+            });
+        }
+        
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast-notification');
+            toast.textContent = message;
+            toast.style.opacity = '1';
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

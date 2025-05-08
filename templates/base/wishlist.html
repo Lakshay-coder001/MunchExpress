@@ -1218,6 +1218,154 @@
       }, 2000);
     }
   </script>
+  // Wishlist functionality
+  document.addEventListener('DOMContentLoaded', function() {
+      // Initialize wishlist buttons
+      initializeWishlistButtons();
+      
+      // Update wishlist count
+      updateWishlistCount();
+      
+      // Add event listeners to all wishlist buttons
+      document.querySelectorAll('.add-to-wishlist-btn').forEach(button => {
+          button.addEventListener('click', function() {
+              const name = this.getAttribute('data-name');
+              const price = parseInt(this.getAttribute('data-price'));
+              const image = this.getAttribute('data-image') || '';
+              
+              toggleWishlistItem(name, price, image, this);
+          });
+      });
+  });
+  
+  // Toggle wishlist item (add or remove)
+  function toggleWishlistItem(name, price, image, button) {
+      // Get current wishlist
+      let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      
+      // Check if item exists in wishlist
+      const itemIndex = wishlist.findIndex(item => item.name === name);
+      
+      if (itemIndex === -1) {
+          // Add to wishlist
+          wishlist.push({
+              name: name,
+              price: price,
+              image: image
+          });
+          
+          // Update button appearance
+          button.innerHTML = '<i class="fas fa-heart" style="color: red;"></i> In Wishlist';
+          button.classList.add('in-wishlist');
+          
+          // Show success message
+          showMessage(`${name} added to wishlist!`);
+      } else {
+          // Remove from wishlist
+          wishlist.splice(itemIndex, 1);
+          
+          // Update button appearance
+          button.innerHTML = '<i class="fas fa-heart"></i> Add to Wishlist';
+          button.classList.remove('in-wishlist');
+          
+          // Show success message
+          showMessage(`${name} removed from wishlist!`);
+      }
+      
+      // Save updated wishlist
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+      
+      // Update wishlist count
+      updateWishlistCount();
+  }
+  
+  // Initialize wishlist buttons based on current wishlist
+  function initializeWishlistButtons() {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      
+      document.querySelectorAll('.add-to-wishlist-btn').forEach(button => {
+          const name = button.getAttribute('data-name');
+          
+          // Check if item is in wishlist
+          const isInWishlist = wishlist.some(item => item.name === name);
+          
+          if (isInWishlist) {
+              button.innerHTML = '<i class="fas fa-heart" style="color: red;"></i> In Wishlist';
+              button.classList.add('in-wishlist');
+          } else {
+              button.innerHTML = '<i class="fas fa-heart"></i> Add to Wishlist';
+              button.classList.remove('in-wishlist');
+          }
+      });
+  }
+  
+  // Update wishlist count in UI
+  function updateWishlistCount() {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const wishlistCountElements = document.querySelectorAll('.wishlist-count');
+      
+      wishlistCountElements.forEach(element => {
+          element.textContent = wishlist.length;
+      });
+  }
+  
+  // Show message function
+  function showMessage(text) {
+      const message = document.createElement('div');
+      message.className = 'success-message';
+      message.textContent = text;
+      document.body.appendChild(message);
+      
+      setTimeout(() => {
+          message.remove();
+      }, 2000);
+  }
+  
+  // Add to cart function for menu items
+  function addToCart(itemName, itemPrice, itemImage) {
+      // Get current cart
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      
+      // Check if item already exists in cart
+      const existingItemIndex = cart.findIndex(item => item.name === itemName);
+      
+      if (existingItemIndex !== -1) {
+          // Increase quantity if item exists
+          cart[existingItemIndex].quantity += 1;
+      } else {
+          // Add new item to cart
+          cart.push({
+              name: itemName,
+              price: itemPrice,
+              quantity: 1,
+              image: itemImage || ''
+          });
+      }
+      
+      // Save updated cart
+      localStorage.setItem('cart', JSON.stringify(cart));
+      
+      // Update cart count
+      updateCartCount();
+      
+      // Show success message
+      showMessage(`${itemName} added to cart!`);
+  }
+  
+  // Update cart count
+  function updateCartCount() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let cartCount = document.getElementById('cart-count');
+      
+      if (cartCount) {
+          if (cart.length > 0) {
+              cartCount.style.display = 'flex';
+              cartCount.innerText = cart.length;
+          } else {
+              cartCount.style.display = 'none';
+          }
+      }
+  }
 </body>
 </html>
 {% load static %}

@@ -1383,6 +1383,16 @@ a:hover {
   80% { opacity: 1; transform: translateX(-50%) translateY(0); }
   100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
 }
+
+/* Wishlist button styles */
+.in-wishlist {
+  background-color: #e74c3c !important;
+}
+
+.in-wishlist i {
+  fill: white;
+  stroke: white;
+}
 </style>
   
   <body>
@@ -1843,6 +1853,11 @@ a:hover {
             <div class="text-lower">
               <div class="price">Free Delivery</div>
               <span class="smallText">North Indian | South Indian | Non-Veg</span>
+              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
+                <button class="add-to-wishlist-btn" data-name="Taj Palace Restaurant" data-price="500" data-image="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
+                  <i data-feather="heart"></i> Add to Wishlist
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1865,6 +1880,11 @@ a:hover {
             <div class="text-lower">
               <div class="price">₹30 Delivery fee</div>
               <span class="smallText">North Indian | Mughlai | Non-Veg</span>
+              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
+                <button class="add-to-wishlist-btn" data-name="Punjab Grill" data-price="800" data-image="https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
+                  <i data-feather="heart"></i> Add to Wishlist
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1887,6 +1907,11 @@ a:hover {
             <div class="text-lower">
               <div class="price">Free Delivery</div>
               <span class="smallText">South Indian | Non-Veg | Fast Food</span>
+              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
+                <button class="add-to-wishlist-btn" data-name="Dosa Plaza" data-price="300" data-image="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
+                  <i data-feather="heart"></i> Add to Wishlist
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1909,6 +1934,11 @@ a:hover {
             <div class="text-lower">
               <div class="price">₹40 Delivery fee</div>
               <span class="smallText">Hyderabadi | Mughlai | Non-Veg</span>
+              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
+                <button class="add-to-wishlist-btn" data-name="Biryani House" data-price="600" data-image="https://images.unsplash.com/photo-1587899897387-091ebd01a6b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
+                  <i data-feather="heart"></i> Add to Wishlist
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1918,7 +1948,7 @@ a:hover {
             </div>
             <div class="text">
               <div class="text-title">
-                <h3>Saravana Bhavan</h3>
+                <h3><a href="{% url 'base:SarwanaBhawan' %}" style="text-decoration: none; color: inherit;">Saravana Bhavan</a></h3>
                 <div class="info">
                   <span><i data-feather="clock"></i> 20-30 MINS</span>
                   <span><i data-feather="tag"></i> ₹400 for two</span>
@@ -1931,6 +1961,11 @@ a:hover {
             <div class="text-lower">
               <div class="price">Free Delivery</div>
               <span class="smallText">Indian | Pure Veg | Authentic</span>
+              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
+                <button class="add-to-wishlist-btn" data-name="Saravana Bhavan" data-price="400" data-image="https://images.unsplash.com/photo-1552566626-52f8b828add9">
+                  <i data-feather="heart"></i> Add to Wishlist
+                </button>
+              </div>
             </div>
           </div>
 
@@ -1954,6 +1989,11 @@ a:hover {
             <div class="text-lower">
               <div class="price">₹40 Delivery fee</div>
               <span class="smallText">Mughlai | Kebabs | Non-Veg</span>
+              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
+                <button class="add-to-wishlist-btn" data-name="Mughals Kitchen" data-price="700" data-image="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4">
+                  <i data-feather="heart"></i> Add to Wishlist
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -2278,6 +2318,8 @@ a:hover {
 
           <div class="listings-grid-element" data-type="non-veg">
             <div class="image">
+              <div class="veg-badge non  data-type="non-veg">
+            <div class="image">
               <div class="veg-badge non-veg"></div>
               <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38" alt="Chicken Pizza" />
             </div>
@@ -2342,8 +2384,6 @@ a:hover {
             <div class="image">
               <div class="veg-badge non-veg"></div>
               <img src="https://images.unsplash.com/photo-1562967914-608f82629710" alt="Chicken Wings" />
-            </div>
-              alt="Chicken Wings" />
             </div>
             <div class="text">
               <div class="text-title">
@@ -2898,7 +2938,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
-  // Fixed wishlist functionality
+  // Wishlist functionality
   document.addEventListener('DOMContentLoaded', function() {
     // Initialize wishlist buttons
     initializeWishlistButtons();
@@ -2967,7 +3007,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Update button appearance
       button.innerHTML = '<i data-feather="heart" style="fill: red; stroke: red;"></i> In Wishlist';
-      button.style.backgroundColor = '#e74c3c';
+      button.classList.add('in-wishlist');
       
       // Show success message
       showMessage(`${name} added to wishlist!`);
@@ -2977,7 +3017,7 @@ document.addEventListener('DOMContentLoaded', function() {
       
       // Update button appearance
       button.innerHTML = '<i data-feather="heart"></i> Add to Wishlist';
-      button.style.backgroundColor = '#ff6b6b';
+      button.classList.remove('in-wishlist');
       
       // Show success message
       showMessage(`${name} removed from wishlist!`);
@@ -3005,9 +3045,10 @@ document.addEventListener('DOMContentLoaded', function() {
       
       if (isInWishlist) {
         button.innerHTML = '<i data-feather="heart" style="fill: red; stroke: red;"></i> In Wishlist';
-        button.style.backgroundColor = '#e74c3c';
+        button.classList.add('in-wishlist');
       } else {
         button.innerHTML = '<i data-feather="heart"></i> Add to Wishlist';
+        button.classList.remove('in-wishlist');
       }
     });
     
