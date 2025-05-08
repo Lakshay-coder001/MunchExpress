@@ -373,10 +373,7 @@
                     <input type="tel" id="phone" placeholder="Enter your phone number" required>
                     <div class="error" id="phoneError">Please enter a valid phone number</div>
                 </div>
-                <div class="form-group">
-                    <label for="upi">UPI ID (Optional)</label>
-                    <input type="text" id="upi" placeholder="Enter your UPI ID">
-                </div>
+                
             </div>
             <button id="rzp-button" class="payment-button">Pay Now</button>
         </div>
@@ -384,75 +381,101 @@
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            const orderDetails = document.getElementById('orderDetails');
-            const subtotalElem = document.getElementById('subtotal');
-            const gstElem = document.getElementById('gst');
-            const totalElem = document.getElementById('total');
-            const phoneInput = document.getElementById('phone');
-            const phoneError = document.getElementById('phoneError');
+        // Assuming `orderDetails` is the object containing the items, price, and other data
+const orderDetails = {
+    orderId: '12345',
+    orderDate: '2024-05-08',
+    customerName: 'John Doe',
+    contactNo: '9041538177',
+    items: [
+        { name: 'Pizza', quantity: 2, price: 300 },
+        { name: 'Burger', quantity: 1, price: 150 }
+    ],
+    amount: 750
+};
 
-            if (cart.length === 0) {
-                window.location.href = 'cart.html';
+// Store order details in localStorage
+localStorage.setItem('orderDetails', JSON.stringify(orderDetails));
+
+// You can now trigger the receipt download function
+downloadReceipt();
+
+    </script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const orderDetails = document.getElementById('orderDetails');
+        const subtotalElem = document.getElementById('subtotal');
+        const gstElem = document.getElementById('gst');
+        const totalElem = document.getElementById('total');
+        const phoneInput = document.getElementById('phone');
+        const phoneError = document.getElementById('phoneError');
+
+        if (cart.length === 0) {
+            window.location.href = 'cart';
+            return;
+        }
+
+        let subtotal = 0;
+        let orderHTML = '';
+
+        cart.forEach(item => {
+            const itemTotal = item.price * item.quantity;
+            subtotal += itemTotal;
+            orderHTML += `
+                <div class="summary-item">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>₹${itemTotal.toFixed(2)}</span>
+                </div>
+            `;
+        });
+
+        orderDetails.innerHTML = orderHTML;
+        const gst = subtotal * 0.05;
+        const total = subtotal + gst;
+
+        subtotalElem.textContent = `₹${subtotal.toFixed(2)}`;
+        gstElem.textContent = `₹${gst.toFixed(2)}`;
+        totalElem.textContent = `₹${total.toFixed(2)}`;
+
+        document.getElementById('rzp-button').onclick = function(e) {
+            const phone = phoneInput.value.trim();
+            if (!phone || phone.length < 10) {
+                phoneError.style.display = 'block';
+                phoneInput.focus();
                 return;
             }
+            phoneError.style.display = 'none';
 
-            let subtotal = 0;
-            let orderHTML = '';
+            const options = {
+                key: 'rzp_test_a4zcZABGsJEBrs', // Replace with your Razorpay key
+                amount: total * 100, // Amount in paise
+                currency: 'INR',
+                name: 'MunchExpress',
+                description: 'Food Order Payment',
+                handler: function (response) {
+                    alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
+                    localStorage.removeItem('cart');
+                    
+                    // Redirect to Django view with GET parameters
+                    window.location.href = `/order_confirmation/?phone=${encodeURIComponent(phone)}&amount=${encodeURIComponent(total.toFixed(2))}`;
 
-            cart.forEach(item => {
-                const itemTotal = item.price * item.quantity;
-                subtotal += itemTotal;
-                orderHTML += `
-                    <div class="summary-item">
-                        <span>${item.name} x ${item.quantity}</span>
-                        <span>₹${itemTotal.toFixed(2)}</span>
-                    </div>
-                `;
-            });
 
-            orderDetails.innerHTML = orderHTML;
-            const gst = subtotal * 0.05;
-            const total = subtotal + gst;
-
-            subtotalElem.textContent = `₹${subtotal.toFixed(2)}`;
-            gstElem.textContent = `₹${gst.toFixed(2)}`;
-            totalElem.textContent = `₹${total.toFixed(2)}`;
-
-            document.getElementById('rzp-button').onclick = function(e) {
-                const phone = phoneInput.value.trim();
-                if (!phone || phone.length < 10) {
-                    phoneError.style.display = 'block';
-                    phoneInput.focus();
-                    return;
+                },
+                prefill: {
+                    contact: phone
+                },
+                theme: {
+                    color: '#06c167'
                 }
-                phoneError.style.display = 'none';
-
-                const options = {
-                    key: 'rzp_test_YOUR_KEY_HERE', // Replace with your Razorpay test key
-                    amount: total * 100, // Amount in paise
-                    currency: 'INR',
-                    name: 'MunchExpress',
-                    description: 'Food Order Payment',
-                    handler: function (response) {
-                        alert('Payment successful! Payment ID: ' + response.razorpay_payment_id);
-                        localStorage.removeItem('cart');
-                        window.location.href = 'index.html';
-                    },
-                    prefill: {
-                        contact: phone
-                    },
-                    theme: {
-                        color: '#06c167'
-                    }
-                };
-                const rzp = new Razorpay(options);
-                rzp.open();
-                e.preventDefault();
             };
-        });
-    </script>
+            const rzp = new Razorpay(options);
+            rzp.open();
+            e.preventDefault();
+        };
+    });
+</script>
+
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
