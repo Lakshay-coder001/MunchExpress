@@ -241,7 +241,7 @@
                         <i class="fas fa-download"></i>
                         Download Receipt
                     </button>
-                    <a href="index.html" class="btn btn-secondary">
+                    <a href="{% url 'base:index' %}" class="btn btn-secondary">
                         <i class="fas fa-home"></i>
                         Back to Home
                     </a>
@@ -288,20 +288,27 @@
         
         // Receipt download functionality
         function downloadReceipt() {
+            // Get cart items from localStorage
+            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+            
+            // Calculate subtotal and GST
+            const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const gst = subtotal * 0.05;
+            const total = subtotal + gst;
+
             const receiptContent = `
                 <div style="padding: 40px; font-family: Arial, sans-serif;">
                     <div style="text-align: center; margin-bottom: 30px;">
                         <h2>MunchExpress</h2>
                         <p>Order Receipt</p>
-                        <p>${orderDetails.orderDate}</p>
+                        <p>${new Date().toLocaleString()}</p>
                     </div>
 
                     <div style="margin-bottom: 20px;">
                         <p><strong>Order ID:</strong> ${orderDetails.orderId}</p>
-                        <p><strong>Customer Name:</strong> {{user.username}}</p>
-                        <p><strong>Contact Number:</strong> ${orderDetails.contactNo}</p>
+                        <p><strong>Customer Name:</strong> {{ username }}</p>
+                        <p><strong>Contact Number:</strong> ${orderDetails.contactNo || document.getElementById('phone-number').textContent.split(': ')[1]}</p>
                     </div>
-                    
 
                     <div style="margin-bottom: 20px;">
                         <h3>Order Items</h3>
@@ -310,18 +317,21 @@
                                 <th style="padding: 8px; text-align: left;">Item</th>
                                 <th style="padding: 8px; text-align: center;">Qty</th>
                                 <th style="padding: 8px; text-align: right;">Price</th>
+                                <th style="padding: 8px; text-align: right;">Total</th>
                             </tr>
-                            ${orderDetails.items.map(item => `
+                            ${cartItems.map(item => `
                                 <tr>
                                     <td style="padding: 8px;">${item.name}</td>
                                     <td style="padding: 8px; text-align: center;">${item.quantity}</td>
                                     <td style="padding: 8px; text-align: right;">₹${item.price.toFixed(2)}</td>
+                                    <td style="padding: 8px; text-align: right;">₹${(item.price * item.quantity).toFixed(2)}</td>
                                 </tr>
                             `).join('')}
                         </table>
                     </div>
 
                     <div style="margin-top: 20px; text-align: right;">
+                       <div style="margin-top: 20px; text-align: right;">
                         <p><strong>Total Amount:</strong> ₹${orderDetails.amount}</p>
                     </div>
 
