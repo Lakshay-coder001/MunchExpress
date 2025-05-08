@@ -593,16 +593,18 @@
     <div id="root">
       <header class="header">
         <div class="header-inner">
-          <div class="brand-center">
-            <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1742133484/1_cyopmr.jpg" alt="MunchExpress Logo" class="logo">
-            <span class="brand-name">unchExpress</span>
-          </div>
+          <a href="{% url 'base:index' %}" style="text-decoration: none; margin-bottom: 45px;" >
+            <div class="brand-center">
+              <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1742133484/1_cyopmr.jpg" alt="MunchExpress Logo" class="logo">
+              <span class="brand-name">unchExpress</span>
+            </div>
+          </a>
           <div class="header-option" id="authSection">
             {% if user.is_authenticated %}
               <div class="user-profile" id="profileToggle">
                 <i class="fa-regular fa-user"></i>
                 <span class="user-name" id="userName">{{ user.username }}</span>
-                <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952" alt="User" class="avatar">
+                <!-- <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952" alt="User" class="avatar"> -->
               </div>
             {% else %}
               <a href="{% url 'login' %}" class="sign-in-link" id="signInLink">
@@ -615,7 +617,9 @@
           <div class="sidebar-content">
             <div class="sidebar-header">
               <div class="user-info">
-                <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952" alt="User" class="avatar">
+                <i class="fa-regular fa-user"></i>
+
+                <!-- <img src="https://images.unsplash.com/photo-1581092795360-fd1ca04f0952" alt="User" class="avatar"> -->
                 <div>
                   <p class="user-name" id="userNameFull">{{ user.username }}</p>
                   <p class="user-email" id="userEmail">{{ user.email }}</p>
@@ -627,7 +631,7 @@
             </div>
             
             <nav class="sidebar-nav">
-              <a href="#" class="nav-item">
+              <a href="{% url 'base:profile' %}" class="nav-item">
                 <i class="fas fa-user"></i>
                 <span>Profile</span>
               </a>
@@ -643,14 +647,14 @@
                 <i class="fas fa-heart"></i>
                 <span>Wishlist</span>
               </a>
-              <a href="#" class="nav-item">
+              <!-- <a href="#" class="nav-item">
                 <i class="fas fa-file-alt"></i>
                 <span>My Reviews</span>
-              </a>
-              <a href="#" class="nav-item">
+              </a> -->
+              <!-- <a href="#" class="nav-item">
                 <i class="fas fa-cog"></i>
                 <span>Settings</span>
-              </a>
+              </a> -->
             </nav>
             
             <div class="sidebar-footer">
@@ -690,10 +694,323 @@
           <div class="container">
             <h2 class="section-title">Account Management</h2>
             <div class="profile-options-grid">
-              
+              <!-- Order History -->
+              <div class="profile-option" id="order-history">
+                <div class="option-header">
+                  <div class="option-icon" style="color: var(--primary)">
+                    <i class="fas fa-shopping-bag"></i>
+                  </div>
+                  <span class="option-count" id="order-count">0 orders</span>
+                </div>
+                <h3 class="option-title">Order History</h3>
+                <p class="option-description">View and track your past orders</p>
+                <a href="#" class="option-link" onclick="showOrderHistory()">View Orders →</a>
+              </div>
+
+              <!-- Vouchers -->
+              <div class="profile-option" id="vouchers">
+                <div class="option-header">
+                  <div class="option-icon" style="color: var(--secondary)">
+                    <i class="fas fa-gift"></i>
+                  </div>
+                  <span class="option-count" id="voucher-count">0 vouchers</span>
+                </div>
+                <h3 class="option-title">Vouchers</h3>
+                <p class="option-description">Your available discount vouchers</p>
+                <a href="#" class="option-link" onclick="showVouchers()">View Vouchers →</a>
+              </div>
+
+              <!-- Wishlist -->
+              <div class="profile-option" id="wishlist">
+                <div class="option-header">
+                  <div class="option-icon" style="color: var(--accent)">
+                    <i class="fas fa-heart"></i>
+                  </div>
+                  <span class="option-count" id="wishlist-count">0 items</span>
+                </div>
+                <h3 class="option-title">Wishlist</h3>
+                <p class="option-description">Your saved favorite items</p>
+                <a href="#" class="option-link" onclick="showWishlist()">View Wishlist →</a>
+              </div>
+
+              <!-- Reviews -->
+              <div class="profile-option" id="reviews">
+                <div class="option-header">
+                  <div class="option-icon" style="color: var(--primary)">
+                    <i class="fas fa-star"></i>
+                  </div>
+                  <span class="option-count" id="review-count">0 reviews</span>
+                </div>
+                <h3 class="option-title">My Reviews</h3>
+                <p class="option-description">Your product and service reviews</p>
+                <a href="#" class="option-link" onclick="showReviews()">View Reviews →</a>
+              </div>
+
+              <!-- Addresses -->
+              <div class="profile-option" id="addresses">
+                <div class="option-header">
+                  <div class="option-icon" style="color: var(--secondary)">
+                    <i class="fas fa-map-marker-alt"></i>
+                  </div>
+                  <span class="option-count" id="address-count">0 addresses</span>
+                </div>
+                <h3 class="option-title">Addresses</h3>
+                <p class="option-description">Manage your delivery addresses</p>
+                <a href="#" class="option-link" onclick="showAddresses()">Manage Addresses →</a>
+              </div>
+
+              <!-- Payment Methods -->
+              <!-- <div class="profile-option" id="payment-methods">
+                <div class="option-header">
+                  <div class="option-icon" style="color: var(--accent)">
+                    <i class="fas fa-credit-card"></i>
+                  </div>
+                  <span class="option-count" id="payment-count">0 methods</span>
+                </div>
+                <h3 class="option-title">Payment Methods</h3>
+                <p class="option-description">Manage your payment options</p>
+                <a href="#" class="option-link" onclick="showPaymentMethods()">Manage Payments →</a>
+              </div> -->
             </div>
           </div>
         </section>
+
+        <!-- Modal for displaying content -->
+        <div id="contentModal" class="modal" style="display: none;">
+          <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div id="modalContent"></div>
+          </div>
+        </div>
+
+        <style>
+          /* Modal Styles */
+          .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+          }
+
+          .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            border-radius: 8px;
+            position: relative;
+          }
+
+          .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+          }
+
+          .close-modal:hover {
+            color: black;
+          }
+
+          /* Content Styles */
+          .content-section {
+            margin-top: 20px;
+          }
+
+          .content-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+          }
+
+          .content-item:last-child {
+            border-bottom: none;
+          }
+        </style>
+
+        <script>
+          // Function to show modal with content
+          function showModal(content) {
+            const modal = document.getElementById('contentModal');
+            const modalContent = document.getElementById('modalContent');
+            modalContent.innerHTML = content;
+            modal.style.display = 'block';
+
+            // Close modal when clicking the X
+            document.querySelector('.close-modal').onclick = function() {
+              modal.style.display = 'none';
+            }
+
+            // Close modal when clicking outside
+            window.onclick = function(event) {
+              if (event.target == modal) {
+                modal.style.display = 'none';
+              }
+            }
+          }
+
+          // Function to show order history
+          function showOrderHistory() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            let content = '<h2>Order History</h2><div class="content-section">';
+            
+            if (orders.length === 0) {
+              content += '<p>No orders found.</p>';
+            } else {
+              orders.forEach(order => {
+                content += `
+                  <div class="content-item">
+                    <h3>Order #${order.id}</h3>
+                    <p>Date: ${new Date(order.date).toLocaleDateString()}</p>
+                    <p>Total: ₹${order.total.toFixed(2)}</p>
+                    <p>Status: ${order.status}</p>
+                  </div>
+                `;
+              });
+            }
+            
+            content += '</div>';
+            showModal(content);
+          }
+
+          // Function to show vouchers
+          function showVouchers() {
+            const vouchers = JSON.parse(localStorage.getItem('vouchers')) || [];
+            let content = '<h2>Available Vouchers</h2><div class="content-section">';
+            
+            if (vouchers.length === 0) {
+              content += '<p>No vouchers available.</p>';
+            } else {
+              vouchers.forEach(voucher => {
+                content += `
+                  <div class="content-item">
+                    <h3>${voucher.code}</h3>
+                    <p>Discount: ${voucher.discount}%</p>
+                    <p>Valid until: ${new Date(voucher.expiry).toLocaleDateString()}</p>
+                  </div>
+                `;
+              });
+            }
+            
+            content += '</div>';
+            showModal(content);
+          }
+
+          // Function to show wishlist
+          function showWishlist() {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            let content = '<h2>Wishlist</h2><div class="content-section">';
+            
+            if (wishlist.length === 0) {
+              content += '<p>Your wishlist is empty.</p>';
+            } else {
+              wishlist.forEach(item => {
+                content += `
+                  <div class="content-item">
+                    <h3>${item.name}</h3>
+                    <p>Price: ₹${item.price.toFixed(2)}</p>
+                  </div>
+                `;
+              });
+            }
+            
+            content += '</div>';
+            showModal(content);
+          }
+
+          // Function to show reviews
+          function showReviews() {
+            const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+            let content = '<h2>My Reviews</h2><div class="content-section">';
+            
+            if (reviews.length === 0) {
+              content += '<p>No reviews yet.</p>';
+            } else {
+              reviews.forEach(review => {
+                content += `
+                  <div class="content-item">
+                    <h3>${review.product}</h3>
+                    <p>Rating: ${'★'.repeat(review.rating)}${'☆'.repeat(5-review.rating)}</p>
+                    <p>${review.comment}</p>
+                    <p>Date: ${new Date(review.date).toLocaleDateString()}</p>
+                  </div>
+                `;
+              });
+            }
+            
+            content += '</div>';
+            showModal(content);
+          }
+
+          // Function to show addresses
+          function showAddresses() {
+            const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            let content = '<h2>Delivery Addresses</h2><div class="content-section">';
+            
+            if (addresses.length === 0) {
+              content += '<p>No addresses saved.</p>';
+            } else {
+              addresses.forEach(address => {
+                content += `
+                  <div class="content-item">
+                    <h3>${address.name}</h3>
+                    <p>${address.street}</p>
+                    <p>${address.city}, ${address.state} ${address.zip}</p>
+                    <p>Phone: ${address.phone}</p>
+                  </div>
+                `;
+              });
+            }
+            
+            content += '</div>';
+            showModal(content);
+          }
+
+          // Function to show payment methods
+          function showPaymentMethods() {
+            const payments = JSON.parse(localStorage.getItem('paymentMethods')) || [];
+            let content = '<h2>Payment Methods</h2><div class="content-section">';
+            
+            if (payments.length === 0) {
+              content += '<p>No payment methods saved.</p>';
+            } else {
+              payments.forEach(payment => {
+                content += `
+                  <div class="content-item">
+                    <h3>${payment.type}</h3>
+                    <p>${payment.details}</p>
+                  </div>
+                `;
+              });
+            }
+            
+            content += '</div>';
+            showModal(content);
+          }
+
+          // Update counts on page load
+          document.addEventListener('DOMContentLoaded', () => {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const vouchers = JSON.parse(localStorage.getItem('vouchers')) || [];
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            const reviews = JSON.parse(localStorage.getItem('reviews')) || [];
+            const addresses = JSON.parse(localStorage.getItem('addresses')) || [];
+            const payments = JSON.parse(localStorage.getItem('paymentMethods')) || [];
+
+            document.getElementById('order-count').textContent = `${orders.length} orders`;
+            document.getElementById('voucher-count').textContent = `${vouchers.length} vouchers`;
+            document.getElementById('wishlist-count').textContent = `${wishlist.length} items`;
+            document.getElementById('review-count').textContent = `${reviews.length} reviews`;
+            document.getElementById('address-count').textContent = `${addresses.length} addresses`;
+            document.getElementById('payment-count').textContent = `${payments.length} methods`;
+          });
+        </script>
       </main>
       
       <footer class="footer">
