@@ -512,39 +512,31 @@ header {
 }
 .footer {
   width: 100%;
-  backdrop-filter: blur(10px);
   background-color: #1a1a1a;
   color: #b0b0b0;
-  padding: 60px 0 20px 0;
+  padding: 40px 20px;
   box-shadow: 0 -2px 15px rgba(0, 0, 0, 0.1);
 }
 
-footer a {
-  color: #EEEEEE;
-}
-
 .footer-content {
-  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 40px;
-  padding: 0 20px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
 }
 
 .footer-section h3 {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
   font-size: 18px;
-  letter-spacing: 0.2px;
   color: #f8f8f8;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
-.footer-section p {
+.footer-section p,
+.footer-section ul li {
   font-family: 'Inter', sans-serif;
-  font-weight: 400;
   font-size: 14px;
   line-height: 1.6;
   color: #b0b0b0;
@@ -556,39 +548,14 @@ footer a {
   padding: 0;
 }
 
-.footer-section ul li {
-  margin-bottom: 12px;
-}
-
 .footer-section ul li a {
   color: #b0b0b0;
   text-decoration: none;
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  padding: 2px 0;
-  position: relative;
-}
-
-.footer-section ul li a::after {
-  content: '';
-  position: absolute;
-  width: 0;
-  height: 1px;
-  bottom: 0;
-  left: 0;
-  background-color: #f8f8f8;
-  transition: width 0.3s ease;
+  transition: color 0.3s ease;
 }
 
 .footer-section ul li a:hover {
   color: #f8f8f8;
-  padding-left: 5px;
-}
-
-.footer-section ul li a:hover::after {
-  width: 100%;
 }
 
 .social-links {
@@ -599,8 +566,7 @@ footer a {
 .social-links a {
   color: #b0b0b0;
   font-size: 20px;
-  transition: all 0.3s ease;
-  display: inline-block;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 .social-links a:hover {
@@ -608,50 +574,24 @@ footer a {
   transform: translateY(-3px);
 }
 
-.social-links a:active {
-  transform: translateY(-1px);
-}
-
 .footer-bottom {
   text-align: center;
-  padding-top: 40px;
-  margin-top: 40px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
+  margin-top: 20px;
   font-size: 13px;
   color: #888;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
 }
 
 @media (max-width: 768px) {
   .footer-content {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
+    grid-template-columns: 1fr;
+    text-align: center;
   }
-  .header {
-    height: 60px;
-    padding: 10px 20px;
-  }
-  
-  .logo-container {
-    margin-left: 8px;
-  }
-  
-  .logo {
-    width: 40px;
-  }
-  
-  .brand-name {
-    font-size: 24px;
-    margin-left: -8px;
-  }
-}
 
-.footer-section h3:first-child {
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 700;
-  font-size: 20px;
-  letter-spacing: -0.3px;
+  .social-links {
+    justify-content: center;
+  }
 }
 
 a {
@@ -1853,11 +1793,6 @@ a:hover {
             <div class="text-lower">
               <div class="price">Free Delivery</div>
               <span class="smallText">North Indian | South Indian | Non-Veg</span>
-              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
-                <button class="add-to-wishlist-btn" data-name="Taj Palace Restaurant" data-price="500" data-image="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
-                  <i data-feather="heart"></i> Add to Wishlist
-                </button>
-              </div>
             </div>
           </div>
 
@@ -1880,11 +1815,6 @@ a:hover {
             <div class="text-lower">
               <div class="price">₹30 Delivery fee</div>
               <span class="smallText">North Indian | Mughlai | Non-Veg</span>
-              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
-                <button class="add-to-wishlist-btn" data-name="Punjab Grill" data-price="800" data-image="https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
-                  <i data-feather="heart"></i> Add to Wishlist
-                </button>
-              </div>
             </div>
           </div>
 
@@ -1907,11 +1837,6 @@ a:hover {
             <div class="text-lower">
               <div class="price">Free Delivery</div>
               <span class="smallText">South Indian | Non-Veg | Fast Food</span>
-              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
-                <button class="add-to-wishlist-btn" data-name="Dosa Plaza" data-price="300" data-image="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
-                  <i data-feather="heart"></i> Add to Wishlist
-                </button>
-              </div>
             </div>
           </div>
 
@@ -1934,11 +1859,6 @@ a:hover {
             <div class="text-lower">
               <div class="price">₹40 Delivery fee</div>
               <span class="smallText">Hyderabadi | Mughlai | Non-Veg</span>
-              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
-                <button class="add-to-wishlist-btn" data-name="Biryani House" data-price="600" data-image="https://images.unsplash.com/photo-1587899897387-091ebd01a6b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80">
-                  <i data-feather="heart"></i> Add to Wishlist
-                </button>
-              </div>
             </div>
           </div>
 
@@ -1961,11 +1881,6 @@ a:hover {
             <div class="text-lower">
               <div class="price">Free Delivery</div>
               <span class="smallText">Indian | Pure Veg | Authentic</span>
-              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
-                <button class="add-to-wishlist-btn" data-name="Saravana Bhavan" data-price="400" data-image="https://images.unsplash.com/photo-1552566626-52f8b828add9">
-                  <i data-feather="heart"></i> Add to Wishlist
-                </button>
-              </div>
             </div>
           </div>
 
@@ -1989,11 +1904,6 @@ a:hover {
             <div class="text-lower">
               <div class="price">₹40 Delivery fee</div>
               <span class="smallText">Mughlai | Kebabs | Non-Veg</span>
-              <div class="action-buttons" style="display: flex; gap: 0.5rem; margin-top: 10px;">
-                <button class="add-to-wishlist-btn" data-name="Mughals Kitchen" data-price="700" data-image="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4">
-                  <i data-feather="heart"></i> Add to Wishlist
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -2404,6 +2314,10 @@ a:hover {
                 </button>
                 <button class="add-to-wishlist-btn" data-name="Spicy Chicken Wings" data-price="349" data-image="https://images.unsplash.com/photo-1562967914-608f82629710">
                   <i data-feather="heart"></i> Add to Wishlist
+                </button>
+              </div>
+            </div>
+            Add to Wishlist
                 </button>
               </div>
             </div>
@@ -3093,51 +3007,46 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
   </body>
   <footer class="footer">
-    <div class="footer-content">
-      <div class="footer-section">
-        <h3>MunchExpress</h3>
-        <p>Delivering happiness, one meal at a time.</p>
-        <p> 123 Foodie Street<br>Cuisine City, CC 12345</p>
-        <p> (555) 123-4567</p>
-      </div>
-      <div class="footer-section">
-        <h3>Company</h3>
-        <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Partner With Us</a></li>
-          <li><a href="#">Blog</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Support</h3>
-        <ul>
-          <li><a href="#">Help Center</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-          <li><a href="#">Terms of Service</a></li>
-        </ul>
-      </div>
-      <div class="footer-section">
-        <h3>Connect With Us</h3>
-        <div class="social-links">
-          <a href="#" aria-label="Facebook">
-            <i class="fab fa-facebook"></i>
-          </a>
-          <a href="#" aria-label="Twitter">
-            <i class="fab fa-twitter"></i>
-          </a>
-          <a href="#" aria-label="Instagram">
-            <i class="fab fa-instagram"></i>
-          </a>
-          <a href="#" aria-label="LinkedIn">
-            <i class="fab fa-linkedin"></i>
-          </a>
-        </div>
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>MunchExpress</h3>
+      <p>Delivering happiness, one meal at a time.</p>
+      <p>
+        123 Foodie Street<br />
+        Cuisine City, CC 12345
+      </p>
+      <p>(555) 123-4567</p>
+    </div>
+    <div class="footer-section">
+      <h3>Company</h3>
+      <ul>
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Careers</a></li>
+        <li><a href="#">Partner With Us</a></li>
+        <li><a href="#">Blog</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Support</h3>
+      <ul>
+        <li><a href="#">Help Center</a></li>
+        <li><a href="#">Contact Us</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Service</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Connect With Us</h3>
+      <div class="social-links">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+        <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>&copy; 2025 MunchExpress. All rights reserved.</p>
-    </div>
-  </footer>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 MunchExpress. All rights reserved.</p>
+  </div>
+</footer>
 </html>
