@@ -9,7 +9,7 @@ def index_grocery(request):  # Add this view
     return render(request, 'munchmart/index_grocery.html')
 
 def cart(request):
-    return render(request, 'cart.html')
+    return render(request, 'munchmart/cart.html')
 
 from django.shortcuts import render
 
