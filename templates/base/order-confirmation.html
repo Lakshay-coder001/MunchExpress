@@ -193,7 +193,8 @@
     <nav class="navbar">
         <div class="navbar-content">
             <div class="logo">
-                <img src="images/logo.png" alt="Cafe Harvest">
+                <!-- <img src="images/logo.png" alt="Cafe Harvest"> -->.
+                 <h2 style="color: #0284c7;">MunchExpress</h2>
             </div>
         </div>
     </nav>
@@ -271,7 +272,7 @@
         document.getElementById('orderId').textContent = orderDetails.orderId;
         document.getElementById('customerName').textContent = orderDetails.customerName || 'Guest';
         document.getElementById('tableNo').textContent = orderDetails.tableNo || 'N/A';
-        document.getElementById('phone').textContent = orderDetails.contactNo || 'N/A';
+        document.getElementById('contactNo').textContent = orderDetails.contactNo || 'N/A';
 
         // Add amount to the detail grid
         const detailGrid = document.querySelector('.detail-grid');
@@ -298,8 +299,9 @@
                     <div style="margin-bottom: 20px;">
                         <p><strong>Order ID:</strong> ${orderDetails.orderId}</p>
                         <p><strong>Customer Name:</strong> {{user.username}}</p>
-                        <p><strong>Contact Number:</strong> ${orderDetails.contactNo}</p>
+                        <p><strong>Contact Number:</strong> ${orderDetails.contactNo || 'N/A'}</p>
                     </div>
+                    
 
                     <div style="margin-bottom: 20px;">
                         <h3>Order Items</h3>

@@ -380,27 +380,7 @@
     </div>
 
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-    <script>
-        // Assuming `orderDetails` is the object containing the items, price, and other data
-const orderDetails = {
-    orderId: '12345',
-    orderDate: '2024-05-08',
-    customerName: 'John Doe',
-    contactNo: '9041538177',
-    items: [
-        { name: 'Pizza', quantity: 2, price: 300 },
-        { name: 'Burger', quantity: 1, price: 150 }
-    ],
-    amount: 750
-};
-
-// Store order details in localStorage
-localStorage.setItem('orderDetails', JSON.stringify(orderDetails));
-
-// You can now trigger the receipt download function
-downloadReceipt();
-
-    </script>
+    
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -458,7 +438,7 @@ downloadReceipt();
                     localStorage.removeItem('cart');
                     
                     // Redirect to Django view with GET parameters
-                    window.location.href = `/order_confirmation/?phone=${encodeURIComponent(phone)}&amount=${encodeURIComponent(total.toFixed(2))}`;
+                    window.location.href = `/order_confirmation/&phone=${encodeURIComponent(phone)}&amount=${encodeURIComponent(total.toFixed(2))}`;
 
 
                 },
@@ -475,6 +455,7 @@ downloadReceipt();
         };
     });
 </script>
+
 
     <footer class="footer">
         <div class="footer-content">
