@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Cafe Harvest</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        /* Main content styles */
+        .main-content {
+            max-width: 1200px;
+            margin: 100px auto 40px;
+            padding: 0 20px;
+        }
+
+        .order-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            overflow: hidden;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .success-header {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+            padding: 3rem;
+            text-align: center;
+            color: white;
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+
+        .success-icon i {
+            font-size: 32px;
+        }
+
+        .order-details {
+            padding: 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 12px;
+        }
+
+        .detail-label {
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .detail-value {
+            color: #0f172a;
+            font-weight: 600;
+            font-size: 1.125rem;
+        }
+
+        .timer-container {
+            background: #f0f9ff;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+
+        .timer {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0284c7;
+            font-variant-numeric: tabular-nums;
+            margin: 0.5rem 0;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 1rem;
+            border-radius: 12px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            transition: all 0.2s ease;
+            min-width: 200px;
+        }
+
+        .btn-primary {
+            background: #0284c7;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 1024px) {
+            .detail-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                margin-top: 80px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="logo">
+                <img src="images/logo.png" alt="Cafe Harvest">
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="order-card">
+            <div class="success-header">
+                <div class="success-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <h1>Order Confirmed!</h1>
+                <p>Thank you for your order</p>
+            </div>
+
+            <div class="order-details">
+                <div class="detail-grid">
+                    <div class="detail-item">
+                        <div class="detail-label">Order ID</div>
+                        <div class="detail-value" id="orderId"></div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">Customer Name</div>
+                        <p>Name: {{ username }}</p>
+                    </div>
+
+                    <div class="detail-item">
+                        <p id="phone-number">Phone Number: </p>
+                    </div>
+                    <div class="detail-item">
+                        <p id="amount-paid">Amount Paid: </p>
+                    </div>
+                </div>
+                
+
+                <div class="timer-container">
+                    <h3>Estimated Preparation Time</h3>
+                    <div class="timer" id="timer"></div>
+                    <p>Your order will be ready soon</p>
+                </div>
+                
+
+                <div class="button-group">
+                    <button onclick="downloadReceipt()" class="btn btn-primary">
+                        <i class="fas fa-download"></i>
+                        Download Receipt
+                    </button>
+                    <a href="index.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i>
+                        Back to Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return decodeURIComponent(urlParams.get(name) || '');
+        }
+
+        // Get all order details from URL
+        const orderDetails = {
+            orderId: 'CH' + Math.floor(Math.random() * 100000),
+            customerName: getUrlParameter('name'),
+            contactNo: getUrlParameter('contact'),
+            amount: getUrlParameter('amount'),
+            paymentId: getUrlParameter('paymentId'),
+            orderDate: getUrlParameter('orderDate'),
+            items: JSON.parse(decodeURIComponent(getUrlParameter('items') || '[]'))
+        };
+
+        // Display values in the page
+        document.getElementById('orderId').textContent = orderDetails.orderId;
+        document.getElementById('customerName').textContent = orderDetails.customerName || 'Guest';
+        document.getElementById('tableNo').textContent = orderDetails.tableNo || 'N/A';
+        document.getElementById('phone').textContent = orderDetails.contactNo || 'N/A';
+
+        // Add amount to the detail grid
+        const detailGrid = document.querySelector('.detail-grid');
+        const amountItem = document.createElement('div');
+        amountItem.className = 'detail-item amount';
+        amountItem.innerHTML = `
+            <div class="detail-label">Amount Paid</div>
+            <div class="detail-value">₹${parseFloat(orderDetails.amount || 0).toFixed(2)}</div>
+        `;
+        detailGrid.appendChild(amountItem);
+
+        // Timer functionality
+        
+        // Receipt download functionality
+        function downloadReceipt() {
+            const receiptContent = `
+                <div style="padding: 40px; font-family: Arial, sans-serif;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h2>MunchExpress</h2>
+                        <p>Order Receipt</p>
+                        <p>${orderDetails.orderDate}</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <p><strong>Order ID:</strong> ${orderDetails.orderId}</p>
+                        <p><strong>Customer Name:</strong> {{user.username}}</p>
+                        <p><strong>Contact Number:</strong> ${orderDetails.contactNo}</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h3>Order Items</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr style="background: #f1f5f9;">
+                                <th style="padding: 8px; text-align: left;">Item</th>
+                                <th style="padding: 8px; text-align: center;">Qty</th>
+                                <th style="padding: 8px; text-align: right;">Price</th>
+                            </tr>
+                            ${orderDetails.items.map(item => `
+                                <tr>
+                                    <td style="padding: 8px;">${item.name}</td>
+                                    <td style="padding: 8px; text-align: center;">${item.quantity}</td>
+                                    <td style="padding: 8px; text-align: right;">₹${item.price.toFixed(2)}</td>
+                                </tr>
+                            `).join('')}
+                        </table>
+                    </div>
+
+                    <div style="margin-top: 20px; text-align: right;">
+                        <p><strong>Total Amount:</strong> ₹${orderDetails.amount}</p>
+                    </div>
+
+                    <div style="margin-top: 40px; text-align: center; color: #666;">
+                        <p>Thank you for dining with us!</p>
+                        <p>Visit us again</p>
+                    </div>
+                </div>
+            `;
+
+            const element = document.createElement('div');
+            element.innerHTML = receiptContent;
+
+            html2pdf()
+                .set({
+                    margin: [0.5, 0.5, 0.5, 0.5],
+                    filename: `munch-express-receipt-${orderDetails.orderId}.pdf`,
+                    image: { type: 'jpeg', quality: 0.98 },
+                    html2canvas: { scale: 2 },
+                    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+                })
+                .from(element)
+                .save();
+        }
+
+        // Start timer when page loads
+        window.onload = function() {
+            const fifteenMinutes = 60 * 15;
+            const display = document.querySelector('#timer');
+            startTimer(fifteenMinutes, display);
+        };
+    </script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const phone = urlParams.get('phone');
+        const amount = urlParams.get('amount');
+
+        document.getElementById('phone-number').textContent = "Phone Number: " + phone;
+        document.getElementById('amount-paid').textContent = "Amount Paid: ₹" + amount;
+    </script>
+    <script>
+        // Function to generate a random time in seconds between 15 minutes (900 seconds) and 30 minutes (1800 seconds)
+        function getRandomTime() {
+            return Math.floor(Math.random() * (1800 - 900 + 1)) + 900; // Returns a value between 900 and 1800 seconds
+        }
+    
+        // Start the timer
+        function startTimer(duration, display) {
+            let timer = duration, minutes, seconds;
+            const countdown = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                display.textContent = minutes + ":" + seconds;
+    
+                // When the timer reaches 0, stop and show "Order Ready!"
+                if (--timer < 0) {
+                    clearInterval(countdown);
+                    display.textContent = "Order Ready!";
+                    display.style.color = "#22c55e"; // Change color when order is ready
+                }
+            }, 1000);
+        }
+    
+        // Get a random time between 15 and 30 minutes and start the timer
+        window.onload = function() {
+            let randomTimeInSeconds = getRandomTime();
+            let display = document.querySelector('#timer');
+            startTimer(randomTimeInSeconds, display);
+        };
+    </script>
+</body>
+</html> 

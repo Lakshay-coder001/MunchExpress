@@ -197,8 +197,9 @@ def SarwanaBhawan(request):
 # view changed
 from django.shortcuts import render
 
-def wishlist_view(request):
-    return render(request, 'base/wishlist.html')
+def order_confirmation(request):
+    username = request.user.username  
+    return render(request, 'base/order-confirmation.html' , {'username': username})
 
 # Restaurant Views
 def restaurant_list(request):

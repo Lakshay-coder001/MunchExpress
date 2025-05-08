@@ -2,7 +2,6 @@ from django.urls import path
 from . import views
 
 app_name = 'base'
-
 urlpatterns = [
     # Page Routes
     path('profile/', views.profile, name='profile'),
@@ -21,6 +20,7 @@ urlpatterns = [
     path('dosa-plaza/', views.DosaPlaza, name='DosaPlaza'),
     path('biryani-house/', views.BiryaniHouse, name='BiryaniHouse'),
     path('payment/', views.payment, name='payment'),
+    path('order_confirmation/', views.order_confirmation, name='order_confirmation'),
     
     # API Routes
     path('api/signup/', views.SignupAPI.as_view(), name='signup_api'),
