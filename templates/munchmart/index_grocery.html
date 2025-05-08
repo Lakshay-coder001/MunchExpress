@@ -1358,6 +1358,209 @@
           opacity: 0;
           pointer-events: none;
         }
+        
+        /* Wishlist styles */
+        .wishlist-button {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 36px;
+          height: 36px;
+          background: rgba(255, 255, 255, 0.8);
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          z-index: 10;
+          transition: all 0.2s ease;
+          border: none;
+          color: #999;
+          font-size: 18px;
+        }
+        
+        .wishlist-button:hover {
+          background: white;
+          transform: scale(1.1);
+          color: #ff6b6b;
+        }
+        
+        .wishlist-button.active {
+          color: #ff6b6b;
+        }
+        
+        .product-actions {
+          display: flex;
+          gap: 10px;
+          margin-top: 10px;
+        }
+        
+        .product-actions .add-to-cart {
+          flex: 1;
+        }
+        
+        .product-actions .add-to-wishlist {
+          width: 40px;
+          height: 40px;
+          border-radius: 4px;
+          background: #f5f5f5;
+          border: 1px solid #ddd;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s ease;
+          color: #999;
+        }
+        
+        .product-actions .add-to-wishlist:hover {
+          background: #eee;
+          color: #ff6b6b;
+        }
+        
+        .product-actions .add-to-wishlist.active {
+          color: #ff6b6b;
+          border-color: #ff6b6b;
+        }
+        
+        /* Wishlist dropdown */
+        .wishlist-dropdown {
+          position: relative;
+          margin-right: 20px;
+        }
+        
+        .wishlist-icon {
+          position: relative;
+          font-size: 20px;
+          color: #323232;
+          cursor: pointer;
+          padding: 5px;
+        }
+        
+        .wishlist-count {
+          position: absolute;
+          top: -5px;
+          right: -5px;
+          background: #ff6b6b;
+          color: white;
+          width: 20px;
+          height: 20px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 10px;
+          font-weight: 600;
+        }
+        
+        .wishlist-dropdown-content {
+          position: absolute;
+          top: 100%;
+          right: 0;
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+          width: 300px;
+          z-index: 1000;
+          display: none;
+          overflow: hidden;
+        }
+        
+        .wishlist-dropdown-content.show {
+          display: block;
+        }
+        
+        .wishlist-header {
+          padding: 15px;
+          border-bottom: 1px solid #eee;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+        
+        .wishlist-header h3 {
+          margin: 0;
+          font-size: 16px;
+          font-weight: 600;
+        }
+        
+        .wishlist-items {
+          max-height: 300px;
+          overflow-y: auto;
+        }
+        
+        .wishlist-item {
+          padding: 10px 15px;
+          border-bottom: 1px solid #eee;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        
+        .wishlist-item:last-child {
+          border-bottom: none;
+        }
+        
+        .wishlist-item img {
+          width: 50px;
+          height: 50px;
+          object-fit: cover;
+          border-radius: 4px;
+        }
+        
+        .wishlist-item-details {
+          flex: 1;
+        }
+        
+        .wishlist-item-name {
+          font-weight: 500;
+          margin-bottom: 4px;
+          font-size: 14px;
+        }
+        
+        .wishlist-item-price {
+          color: var(--color-green);
+          font-weight: 600;
+          font-size: 14px;
+        }
+        
+        .wishlist-item-remove {
+          color: #999;
+          cursor: pointer;
+          transition: color 0.2s ease;
+        }
+        
+        .wishlist-item-remove:hover {
+          color: #ff6b6b;
+        }
+        
+        .wishlist-footer {
+          padding: 15px;
+          border-top: 1px solid #eee;
+          text-align: center;
+        }
+        
+        .wishlist-footer a {
+          display: block;
+          padding: 8px 0;
+          background: var(--color-green);
+          color: white;
+          border-radius: 4px;
+          text-decoration: none;
+          font-weight: 500;
+          transition: background 0.2s ease;
+        }
+        
+        .wishlist-footer a:hover {
+          background: #05a057;
+          text-decoration: none;
+        }
+        
+        .empty-wishlist-message {
+          padding: 20px;
+          text-align: center;
+          color: #999;
+        }
     </style>
 </head>
 <body>
@@ -1413,6 +1616,30 @@
       <div class="searchBar">
         <input type="text" class="search-input" placeholder="Search for your daily needs..." onkeyup="handleSearchInput(event)" />
         <div class="search-results"></div>
+        
+        <!-- Wishlist Dropdown -->
+        <div class="wishlist-dropdown">
+          <div class="wishlist-icon" id="wishlistIcon">
+            <i class="fas fa-heart"></i>
+            <span class="wishlist-count" id="wishlistCount">0</span>
+          </div>
+          <div class="wishlist-dropdown-content" id="wishlistDropdown">
+            <div class="wishlist-header">
+              <h3>My Wishlist</h3>
+              <span id="wishlistItemCount">0 items</span>
+            </div>
+            <div class="wishlist-items" id="wishlistItems">
+              <!-- Wishlist items will be loaded here -->
+              <div class="empty-wishlist-message" id="emptyWishlistMessage">
+                Your wishlist is empty
+              </div>
+            </div>
+            <div class="wishlist-footer">
+              <a href="{% url 'munchmart:wishlist' %}">View Wishlist</a>
+            </div>
+          </div>
+        </div>
+        
         <div class="header-option" id="authSection">
           {% if user.is_authenticated %}
             <div class="user-profile" style="display: flex; align-items: center; cursor: pointer;">
@@ -1511,6 +1738,9 @@
         <div class="products-grid" id="productsGrid">
           <div class="product-card veg" data-type="veg" data-price="120" data-name="Fresh Apples">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Apples', 120, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806517/apples_qftlc0.webp', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806517/apples_qftlc0.webp" alt="Fresh Apples">
             <div class="product-info">
               <h3>Fresh Apples</h3>
@@ -1528,7 +1758,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Fresh Apples', 120, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806517/apples_qftlc0.webp')">
+              <button class="add-to-cart" onclick="addToCart('Fresh Apples', 120, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806517/apples_qftlc0.webp', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1537,6 +1767,9 @@
           
           <div class="product-card veg" data-type="veg" data-price="85" data-name="Organic Bananas">                  
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Organic Bananas', 85, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806521/banana_a8uctz.avif', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806521/banana_a8uctz.avif" alt="bananas">
             <div class="product-info">
               <h3>Organic Bananas</h3>
@@ -1554,7 +1787,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Organic Bananas', 85, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806521/banana_a8uctz.avif')">
+              <button class="add-to-cart" onclick="addToCart('Organic Bananas', 85, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806521/banana_a8uctz.avif', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1563,6 +1796,9 @@
           
           <div class="product-card veg" data-type="veg" data-price="60" data-name="Fresh Milk">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Milk', 60, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806518/verka_milk_ug4pxg.jpg', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806518/verka_milk_ug4pxg.jpg" alt="Fresh Milk">
             <div class="product-info">
               <h3>Fresh Milk</h3>
@@ -1579,7 +1815,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Fresh Milk', 60, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806518/verka_milk_ug4pxg.jpg')">
+              <button class="add-to-cart" onclick="addToCart('Fresh Milk', 60, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806518/verka_milk_ug4pxg.jpg', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1589,6 +1825,9 @@
           <div class="product-card veg" data-type="veg" data-price="50" data-name="Whole Wheat Bread">
             <div class="food-type-indicator veg"></div>
             <div class="product-badge">BUY 1 GET 1</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Whole Wheat Bread', 50, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg" alt="Whole Wheat Bread">
             <div class="product-info">
               <h3>Whole Wheat Bread</h3>
@@ -1605,15 +1844,18 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Whole Wheat Bread', 50, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg')">
+              <button class="add-to-cart" onclick="addToCart('Whole Wheat Bread', 50, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
             </div>
           </div>
           
-          <!-- <div class="product-card non-veg" data-type="non-veg" data-price="200" data-name="Chicken Breast">
+          <div class="product-card non-veg" data-type="non-veg" data-price="200" data-name="Chicken Breast">
             <div class="food-type-indicator non-veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Chicken Breast', 200, 'https://media.istockphoto.com/id/462258465/photo/raw-chicken-breast-fillets.jpg?s=612x612&w=0&k=20&c=dTLkpzyV8WoRhMxlXaHlnIN9SPktlkqUfphtxykC0ws=', 'non-veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://media.istockphoto.com/id/462258465/photo/raw-chicken-breast-fillets.jpg?s=612x612&w=0&k=20&c=dTLkpzyV8WoRhMxlXaHlnIN9SPktlkqUfphtxykC0ws=" alt="Chicken Breast">
             <div class="product-info">
               <h3>Chicken Breast</h3>
@@ -1630,16 +1872,19 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Chicken Breast', 200, 'https://media.istockphoto.com/id/462258465/photo/raw-chicken-breast-fillets.jpg')">
+              <button class="add-to-cart" onclick="addToCart('Chicken Breast', 200, 'https://media.istockphoto.com/id/462258465/photo/raw-chicken-breast-fillets.jpg', 'non-veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
             </div>
-          </div> -->
+          </div>
           
           <!-- New Products -->
           <div class="product-card veg" data-type="veg" data-price="70" data-name="Fresh Oranges">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Oranges', 70, 'https://images.immediate.co.uk/production/volatile/sites/30/2017/06/oranges-85fb2b6.jpg', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.immediate.co.uk/production/volatile/sites/30/2017/06/oranges-85fb2b6.jpg" alt="Fresh Oranges">
             <div class="product-info">
               <h3>Fresh Oranges</h3>
@@ -1657,7 +1902,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Fresh Oranges', 70, 'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab12?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Fresh Oranges', 70, 'https://images.unsplash.com/photo-1611080626919-7cf5a9dbab12?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1666,6 +1911,9 @@
           
           <div class="product-card veg" data-type="veg" data-price="40" data-name="Organic Tomatoes">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Organic Tomatoes', 40, 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1546094096-0df4bcaaa337?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Organic Tomatoes">
             <div class="product-info">
               <h3>Organic Tomatoes</h3>
@@ -1682,7 +1930,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Organic Tomatoes', 40, 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Organic Tomatoes', 40, 'https://images.unsplash.com/photo-1546094096-0df4bcaaa337?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1693,6 +1941,9 @@
           <div class="product-card veg" data-type="veg" data-price="65" data-name="Fresh Avocados">
             <div class="food-type-indicator veg"></div>
             <div class="organic-badge">ORGANIC</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Avocados', 65, 'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Fresh Avocados">
             <div class="product-info">
               <h3>Fresh Avocados</h3>
@@ -1710,7 +1961,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Fresh Avocados', 65, 'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Fresh Avocados', 65, 'https://images.unsplash.com/photo-1519162808019-7de1683fa2ad?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1720,6 +1971,9 @@
           <div class="product-card veg" data-type="veg" data-price="55" data-name="Organic Spinach">
             <div class="food-type-indicator veg"></div>
             <div class="organic-badge">ORGANIC</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Organic Spinach', 55, 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1576045057995-568f588f82fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Organic Spinach">
             <div class="product-info">
               <h3>Organic Spinach</h3>
@@ -1736,7 +1990,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Organic Spinach', 55, 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Organic Spinach', 55, 'https://images.unsplash.com/photo-1576045057995-568f588f82fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1755,6 +2009,9 @@
         <div class="products-grid">
           <div class="product-card veg" data-type="veg" data-price="35" data-name="Coca Cola">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Coca Cola', 35, 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Coca Cola">
             <div class="product-info">
               <h3>Coca Cola</h3>
@@ -1771,7 +2028,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Coca Cola', 35, 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Coca Cola', 35, 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1780,6 +2037,9 @@
           
           <div class="product-card veg" data-type="veg" data-price="120" data-name="Orange Juice">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Orange Juice', 120, 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Orange Juice">
             <div class="product-info">
               <h3>Orange Juice</h3>
@@ -1797,7 +2057,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Orange Juice', 120, 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Orange Juice', 120, 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1807,6 +2067,9 @@
           <div class="product-card veg" data-type="veg" data-price="90" data-name="Green Tea">
             <div class="food-type-indicator veg"></div>
             <div class="product-badge">HEALTHY</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Green Tea', 90, 'https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Green Tea">
             <div class="product-info">
               <h3>Green Tea</h3>
@@ -1823,7 +2086,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Green Tea', 45, 'https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Green Tea', 45, 'https://images.unsplash.com/photo-1627435601361-ec25f5b1d0e5?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1832,6 +2095,9 @@
           
           <div class="product-card veg" data-type="veg" data-price="75" data-name="Mango Smoothie">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Mango Smoothie', 75, 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Mango Smoothie">
             <div class="product-info">
               <h3>Mango Smoothie</h3>
@@ -1849,7 +2115,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Mango Smoothie', 75, 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Mango Smoothie', 75, 'https://images.unsplash.com/photo-1623065422902-30a2d299bbe4?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1859,6 +2125,9 @@
           <!-- New Beverage Products -->
           <div class="product-card veg" data-type="veg" data-price="45" data-name="Sparkling Water">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Sparkling Water', 45, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaY2L6PGu2BesUdaWI38D4LPpQzZUz69tuLQ&s', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaY2L6PGu2BesUdaWI38D4LPpQzZUz69tuLQ&s" alt="Sparkling Water">
             <div class="product-info">
               <h3>Sparkling Water</h3>
@@ -1875,7 +2144,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Sparkling Water', 45, 'https://images.unsplash.com/photo-1598540172462-e5a158eb1623?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Sparkling Water', 45, 'https://images.unsplash.com/photo-1598540172462-e5a158eb1623?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1884,6 +2153,9 @@
           
           <div class="product-card veg" data-type="veg" data-price="110" data-name="Cold Brew Coffee">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Cold Brew Coffee', 110, 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1517701604599-bb29b565090c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Cold Brew Coffee">
             <div class="product-info">
               <h3>Cold Brew Coffee</h3>
@@ -1901,7 +2173,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Cold Brew Coffee', 110, 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Cold Brew Coffee', 110, 'https://images.unsplash.com/photo-1517701604599-bb29b565090c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1911,6 +2183,9 @@
           <div class="product-card veg" data-type="veg" data-price="85" data-name="Protein Shake">
             <div class="food-type-indicator veg"></div>
             <div class="product-badge">NEW</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Protein Shake', 85, 'https://dymatize.imgix.net/a/blog/ChocPeppermintProteinShake_1856x1236.jpg?ar=928%3A618&auto=format%2Ccompress&fit=crop&ixlib=php-3.1.0&s=16528de05896185ee56d4574ff411d60', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://dymatize.imgix.net/a/blog/ChocPeppermintProteinShake_1856x1236.jpg?ar=928%3A618&auto=format%2Ccompress&fit=crop&ixlib=php-3.1.0&s=16528de05896185ee56d4574ff411d60" alt="Protein Shake">
             <div class="product-info">
               <h3>Protein Shake</h3>
@@ -1928,7 +2203,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Protein Shake', 85, 'https://dymatize.imgix.net/a/blog/ChocPeppermintProteinShake_1856x1236.jpg?ar=928%3A618&auto=format%2Ccompress&fit=crop&ixlib=php-3.1.0&s=16528de05896185ee56d4574ff411d60')">
+              <button class="add-to-cart" onclick="addToCart('Protein Shake', 85, 'https://dymatize.imgix.net/a/blog/ChocPeppermintProteinShake_1856x1236.jpg?ar=928%3A618&auto=format%2Ccompress&fit=crop&ixlib=php-3.1.0&s=16528de05896185ee56d4574ff411d60', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1937,6 +2212,9 @@
 
           <div class="product-card veg" data-type="veg" data-price="65" data-name="Fresh Juice">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Fresh Juice', 65, 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Fresh Juice">
             <div class="product-info">
               <h3>Fresh Juice</h3>
@@ -1953,7 +2231,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Fresh Juice', 65, 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Fresh Juice', 65, 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1963,6 +2241,9 @@
           <div class="product-card veg" data-type="veg" data-price="95" data-name="Energy Drink">
             <div class="food-type-indicator veg"></div>
             <div class="product-badge">BESTSELLER</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Energy Drink', 95, 'https://www.rn.com/siteassets/blog/energy-drink.jpg', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://www.rn.com/siteassets/blog/energy-drink.jpg" alt="Energy Drink">
             <div class="product-info">
               <h3>Energy Drink</h3>
@@ -1976,11 +2257,12 @@
                   <i class="fas fa-minus"></i>
                 </div>
                 <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
+                <div class="quantity-btn plus" onclick="increaseQuantity(this  max="10" readonly>
                 <div class="quantity-btn plus" onclick="increaseQuantity(this)">
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Energy Drink', 95, 'https://www.rn.com/siteassets/blog/energy-drink.jpg')">
+              <button class="add-to-cart" onclick="addToCart('Energy Drink', 95, 'https://www.rn.com/siteassets/blog/energy-drink.jpg', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -1999,6 +2281,9 @@
         <div class="products-grid">
           <div class="product-card veg" data-type="veg" data-price="50" data-name="Whole Wheat Bread">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Whole Wheat Bread', 50, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg" alt="Whole Wheat Bread">
             <div class="product-info">
               <h3>Whole Wheat Bread</h3>
@@ -2015,7 +2300,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Whole Wheat Bread', 50, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg')">
+              <button class="add-to-cart" onclick="addToCart('Whole Wheat Bread', 50, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2024,6 +2309,9 @@
           
           <div class="product-card veg" data-type="veg" data-price="35" data-name="Croissant">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Croissant', 35, 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Croissant">
             <div class="product-info">
               <h3>Croissant</h3>
@@ -2040,7 +2328,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Croissant', 35, 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Croissant', 35, 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2050,6 +2338,9 @@
           <div class="product-card veg" data-type="veg" data-price="120" data-name="Chocolate Cake">
             <div class="food-type-indicator veg"></div>
             <div class="product-badge">BESTSELLER</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Chocolate Cake', 120, 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Chocolate Cake">
             <div class="product-info">
               <h3>Chocolate Cake</h3>
@@ -2067,7 +2358,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Chocolate Cake', 120, 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Chocolate Cake', 120, 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2076,6 +2367,9 @@
           
           <div class="product-card veg" data-type="veg" data-price="60" data-name="Cookies">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Cookies', 60, 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1499636136210-6f4ee915583e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Cookies">
             <div class="product-info">
               <h3>Cookies</h3>
@@ -2092,7 +2386,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Cookies', 60, 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Cookies', 60, 'https://images.unsplash.com/photo-1499636136210-6f4ee915583e?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2103,6 +2397,9 @@
           <div class="product-card veg" data-type="veg" data-price="80" data-name="Cinnamon Rolls">
             <div class="food-type-indicator veg"></div>
             <div class="product-badge">NEW</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Cinnamon Rolls', 80, 'https://www.cookingclassy.com/wp-content/uploads/2020/09/mini-cinnamon-rolls-21.jpg', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://www.cookingclassy.com/wp-content/uploads/2020/09/mini-cinnamon-rolls-21.jpg" alt="Cinnamon Rolls">
             <div class="product-info">
               <h3>Cinnamon Rolls</h3>
@@ -2120,7 +2417,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Cinnamon Rolls', 80, 'https://images.unsplash.com/photo-1583529245872-c64a939eebc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Cinnamon Rolls', 80, 'https://images.unsplash.com/photo-1583529245872-c64a939eebc3?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2129,6 +2426,9 @@
           
           <div class="product-card veg" data-type="veg" data-price="70" data-name="Multigrain Bagels">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Multigrain Bagels', 70, 'https://images.squarespace-cdn.com/content/v1/5a51221e8a02c7e65800f1b7/1584544196684-ZKJQZI4CQ2CX07JJ0OZS/bagels7.jpg', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.squarespace-cdn.com/content/v1/5a51221e8a02c7e65800f1b7/1584544196684-ZKJQZI4CQ2CX07JJ0OZS/bagels7.jpg" alt="Multigrain Bagels">
             <div class="product-info">
               <h3>Multigrain Bagels</h3>
@@ -2145,7 +2445,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Multigrain Bagels', 70, 'https://images.unsplash.com/photo-1585478259715-4ddc711c9a9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Multigrain Bagels', 70, 'https://images.unsplash.com/photo-1585478259715-4ddc711c9a9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2155,6 +2455,9 @@
           <div class="product-card veg" data-type="veg" data-price="90" data-name="Sourdough Bread">
             <div class="food-type-indicator veg"></div>
             <div class="product-badge">PREMIUM</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Sourdough Bread', 90, 'https://daddioskitchen.com/wp-content/uploads/2022/12/IMG-4832.jpg', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://daddioskitchen.com/wp-content/uploads/2022/12/IMG-4832.jpg" alt="Sourdough Bread">
             <div class="product-info">
               <h3>Sourdough Bread</h3>
@@ -2172,7 +2475,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Sourdough Bread', 90, 'https://daddioskitchen.com/wp-content/uploads/2022/12/IMG-4832.jpg')">
+              <button class="add-to-cart" onclick="addToCart('Sourdough Bread', 90, 'https://daddioskitchen.com/wp-content/uploads/2022/12/IMG-4832.jpg', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2181,6 +2484,9 @@
 
           <div class="product-card veg" data-type="veg" data-price="65" data-name="Blueberry Muffins">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Blueberry Muffins', 65, 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1607958996333-41aef7caefaa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Blueberry Muffins">
             <div class="product-info">
               <h3>Blueberry Muffins</h3>
@@ -2197,7 +2503,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Blueberry Muffins', 65, 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Blueberry Muffins', 65, 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2207,6 +2513,9 @@
           <div class="product-card veg" data-type="veg" data-price="85" data-name="Chocolate Brownie">
             <div class="food-type-indicator veg"></div>
             <div class="product-badge">BESTSELLER</div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Chocolate Brownie', 85, 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.unsplash.com/photo-1606313564200-e75d5e30476c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Chocolate Brownie">
             <div class="product-info">
               <h3>Chocolate Brownie</h3>
@@ -2224,7 +2533,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Chocolate Brownie', 85, 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
+              <button class="add-to-cart" onclick="addToCart('Chocolate Brownie', 85, 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2233,6 +2542,9 @@
 
           <div class="product-card veg" data-type="veg" data-price="75" data-name="Garlic Bread">
             <div class="food-type-indicator veg"></div>
+            <button class="wishlist-button" onclick="toggleWishlist(this, 'Garlic Bread', 75, 'https://images.immediate.co.uk/production/volatile/sites/30/2024/03/AirFryerGarlicBread-ea8fcde.jpg', 'veg')">
+              <i class="fas fa-heart"></i>
+            </button>
             <img src="https://images.immediate.co.uk/production/volatile/sites/30/2024/03/AirFryerGarlicBread-ea8fcde.jpg" alt="Garlic Bread">
             <div class="product-info">
               <h3>Garlic Bread</h3>
@@ -2249,7 +2561,7 @@
                   <i class="fas fa-plus"></i>
                 </div>
               </div>
-              <button class="add-to-cart" onclick="addToCart('Garlic Bread', 75, 'https://images.immediate.co.uk/production/volatile/sites/30/2024/03/AirFryerGarlicBread-ea8fcde.jpg')">
+              <button class="add-to-cart" onclick="addToCart('Garlic Bread', 75, 'https://images.immediate.co.uk/production/volatile/sites/30/2024/03/AirFryerGarlicBread-ea8fcde.jpg', 'veg')">
                 <i class="fas fa-shopping-cart"></i>
                 Add to Cart
               </button>
@@ -2259,1072 +2571,8 @@
       </div>
     </section>
 
-    <section class="deals-section" id="meat-fish">
-      <div class="container">
-        <div class="section-header">
-          <h2>Meat & Fish</h2>
-        </div>
+    <!-- Additional sections would continue here with the same pattern -->
 
-        <div class="products-grid">
-          <div class="product-card non-veg" data-type="non-veg" data-price="200" data-name="Chicken Breast">
-            <div class="food-type-indicator non-veg"></div>
-            <img src="https://media.istockphoto.com/id/462258465/photo/raw-chicken-breast-fillets.jpg?s=612x612&w=0&k=20&c=dTLkpzyV8WoRhMxlXaHlnIN9SPktlkqUfphtxykC0ws=" alt="Chicken Breast">
-            <div class="product-info">
-              <h3>Chicken Breast</h3>
-              <p class="product-weight">500 g</p>
-              <div class="price-container">
-                <span class="current-price">₹200</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Chicken Breast', 200, 'https://media.istockphoto.com/id/462258465/photo/raw-chicken-breast-fillets.jpg')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card non-veg" data-type="non-veg" data-price="350" data-name="Atlantic Salmon">
-            <div class="food-type-indicator non-veg"></div>
-            <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Atlantic Salmon">
-            <div class="product-info">
-              <h3>Atlantic Salmon</h3>
-              <p class="product-weight">300 g</p>
-              <div class="price-container">
-                <span class="current-price">₹350</span>
-                <span class="original-price">₹400</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Atlantic Salmon', 350, 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card non-veg" data-type="non-veg" data-price="180" data-name="Mutton">
-            <div class="food-type-indicator non-veg"></div>
-            <img src="https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Mutton">
-            <div class="product-info">
-              <h3>Mutton</h3>
-              <p class="product-weight">500 g</p>
-              <div class="price-container">
-                <span class="current-price">₹180</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Mutton', 180, 'https://images.unsplash.com/photo-1603360946369-dc9bb6258143?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card non-veg" data-type="non-veg" data-price="250" data-name="Prawns">
-            <div class="food-type-indicator non-veg"></div>
-            <img src="https://bombayfreshfish.com/wp-content/uploads/2022/09/Pink-prawns1-LR.jpg" alt="Prawns">
-            <div class="product-info">
-              <h3>Prawns</h3>
-              <p class="product-weight">250 g</p>
-              <div class="price-container">
-                <span class="current-price">₹250</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Prawns', 250, 'https://images.unsplash.com/photo-1565680018160-64b74e0186b9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <!-- New Meat & Fish Products -->
-          <div class="product-card non-veg" data-type="non-veg" data-price="280" data-name="Lamb Chops">
-            <div class="food-type-indicator non-veg"></div>
-            <img src="https://images.unsplash.com/photo-1608039755401-742074f0548d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Lamb Chops">
-            <div class="product-info">
-              <h3>Lamb Chops</h3>
-              <p class="product-weight">400 g</p>
-              <div class="price-container">
-                <span class="current-price">₹280</span>
-                <span class="original-price">₹320</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Lamb Chops', 280, 'https://images.unsplash.com/photo-1608039755401-742074f0548d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card non-veg" data-type="non-veg" data-price="320" data-name="Tuna Steaks">
-            <div class="food-type-indicator non-veg"></div>
-            <div class="product-badge">PREMIUM</div>
-            <img src="https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Tuna Steak">
-            <div class="product-info">
-              <h3>Tuna Steak</h3>
-              <p class="product-weight">300 g</p>
-              <div class="price-container">
-                <span class="current-price">₹320</span>
-                <span class="original-price">₹380</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Tuna Steak', 320, 'https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card non-veg" data-type="non-veg" data-price="280" data-name="Chicken Wings">
-            <div class="food-type-indicator non-veg"></div>
-            <img src="https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Chicken Wings">
-            <div class="product-info">
-              <h3>Chicken Wings</h3>
-              <p class="product-weight">500 g</p>
-              <div class="price-container">
-                <span class="current-price">₹280</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Chicken Wings', 280, 'https://images.unsplash.com/photo-1567620832903-9fc6debc209f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card non-veg" data-type="non-veg" data-price="420" data-name="Sea Bass">
-            <div class="food-type-indicator non-veg"></div>
-            <div class="product-badge">BESTSELLER</div>
-            <img src="https://files.ekmcdn.com/hamiltons1471/images/farmed-sea-bass-whole-7-p.jpeg" alt="Sea Bass">
-            <div class="product-info">
-              <h3>Sea Bass</h3>
-              <p class="product-weight">400 g</p>
-              <div class="price-container">
-                <span class="current-price">₹420</span>
-                <span class="original-price">₹480</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Sea Bass', 420, 'https://files.ekmcdn.com/hamiltons1471/images/farmed-sea-bass-whole-7-p.jpeg')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card non-veg" data-type="non-veg" data-price="380" data-name="Lamb Leg">
-            <div class="food-type-indicator non-veg"></div>
-            <img src="https://images.unsplash.com/photo-1608039755401-742074f0548d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Lamb Leg">
-            <div class="product-info">
-              <h3>Lamb Leg</h3>
-              <p class="product-weight">1 kg</p>
-              <div class="price-container">
-                <span class="current-price">₹380</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Lamb Leg', 380, 'https://images.unsplash.com/photo-1608039755401-742074f0548d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- New Section: Frozen Foods -->
-    <section class="deals-section" id="frozen-foods">
-      <div class="container">
-        <div class="section-header">
-          <h2>Frozen Foods</h2>
-        </div>
-
-        <div class="products-grid">
-          <div class="product-card veg" data-type="veg" data-price="150" data-name="Frozen Mixed Vegetables">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://images.unsplash.com/photo-1610832958506-aa56368176cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Frozen Mixed Vegetables">
-            <div class="product-info">
-              <h3>Frozen Mixed Vegetables</h3>
-              <p class="product-weight">500 g</p>
-              <div class="price-container">
-                <span class="current-price">₹150</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Frozen Mixed Vegetables', 150, 'https://images.unsplash.com/photo-1610832958506-aa56368176cf?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card non-veg" data-type="non-veg" data-price="220" data-name="Frozen Chicken Nuggets">
-            <div class="food-type-indicator non-veg"></div>
-            <img src="https://images.unsplash.com/photo-1619881590738-a111d176d906?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Frozen Chicken Nuggets">
-            <div class="product-info">
-              <h3>Frozen Chicken Nuggets</h3>
-              <p class="product-weight">400 g</p>
-              <div class="price-container">
-                <span class="current-price">₹220</span>
-                <span class="original-price">₹250</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Frozen Chicken Nuggets', 220, 'https://images.unsplash.com/photo-1619881590738-a111d176d906?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="180" data-name="Frozen Pizza">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Frozen Pizza">
-            <div class="product-info">
-              <h3>Frozen Pizza</h3>
-              <p class="product-weight">350 g</p>
-              <div class="price-container">
-                <span class="current-price">₹180</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Frozen Pizza', 180, 'https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="130" data-name="Ice Cream">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://images.unsplash.com/photo-1563805042-7684c019e1cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Ice Cream">
-            <div class="product-info">
-              <h3>Ice Cream</h3>
-              <p class="product-weight">500 ml</p>
-              <div class="price-container">
-                <span class="current-price">₹130</span>
-                <span class="original-price">₹150</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Ice Cream', 130, 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- New Section: Household -->
-    <section class="deals-section" id="household">
-      <div class="container">
-        <div class="section-header">
-          <h2>Household</h2>
-        </div>
-
-        <div class="products-grid">
-          <div class="product-card veg" data-type="veg" data-price="120" data-name="Laundry Detergent">
-            <img src="https://pyxis.nymag.com/v1/imgs/53a/7c2/b15562ffb488b508f955751d9117cc495d.jpg" alt="Laundry Detergent">
-            <div class="product-info">
-              <h3>Laundry Detergent</h3>
-              <p class="product-weight">1 kg</p>
-              <div class="price-container">
-                <span class="current-price">₹120</span>
-                <span class="original-price">₹140</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Laundry Detergent', 120, 'https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="90" data-name="Dish Soap">
-            <img src="https://cdn.apartmenttherapy.info/image/upload/v1586973875/at/organize-clean/solid-dish-soap-package-free-better.jpg" alt="Dish Soap">
-            <div class="product-info">
-              <h3>Dish Soap</h3>
-              <p class="product-weight">750 ml</p>
-              <div class="price-container">
-                <span class="current-price">₹90</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Dish Soap', 90, 'https://images.unsplash.com/photo-1622465413576-ab1fee798e89?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="60" data-name="Toilet Paper">
-            <img src="https://rukminim3.flixcart.com/image/850/1000/ktn9pjk0/toilet-paper-roll/s/7/r/toilet-tissue-rolls-with-100-natural-tissue-extra-soft-tissue-original-imag6xqgxpqb3xpg.jpeg?q=90&crop=false" alt="Toilet Paper">
-            <div class="product-info">
-              <h3>Toilet Paper</h3>
-              <p class="product-weight">6 rolls</p>
-              <div class="price-container">
-                <span class="current-price">₹60</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Toilet Paper', 60, 'https://images.unsplash.com/photo-1583251633146-d0c6c036187d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="150" data-name="All-Purpose Cleaner">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT08Bz7JQucK-DvRIbxcBFkugnXLb4dOXlVxg&s" alt="All-Purpose Cleaner">
-            <div class="product-info">
-              <h3>All-Purpose Cleaner</h3>
-              <p class="product-weight">1 liter</p>
-              <div class="price-container">
-                <span class="current-price">₹150</span>
-                <span class="original-price">₹180</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('All-Purpose Cleaner', 150, 'https://images.unsplash.com/photo-1585421514738-01798e348b17?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- New Section: Dairy & Eggs -->
-    <section class="deals-section" id="dairy">
-      <div class="container">
-        <div class="section-header">
-          <h2>Dairy & Eggs</h2>
-        </div>
-
-        <div class="products-grid">
-          <div class="product-card veg" data-type="veg" data-price="60" data-name="Fresh Milk">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806518/verka_milk_ug4pxg.jpg" alt="Fresh Milk">
-            <div class="product-info">
-              <h3>Fresh Milk</h3>
-              <p class="product-weight">1 liter</p>
-              <div class="price-container">
-                <span class="current-price">₹60</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Fresh Milk', 60, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806518/verka_milk_ug4pxg.jpg')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="80" data-name="Cheese Slices">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://images.unsplash.com/photo-1624806992066-5ffcf7ca186b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Cheese Slices">
-            <div class="product-info">
-              <h3>Cheese Slices</h3>
-              <p class="product-weight">200 g</p>
-              <div class="price-container">
-                <span class="current-price">₹80</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Cheese Slices', 80, 'https://images.unsplash.com/photo-1624806992066-5ffcf7ca186b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="70" data-name="Yogurt">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://images.unsplash.com/photo-1571212515416-fef01fc43637?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Yogurt">
-            <div class="product-info">
-              <h3>Yogurt</h3>
-              <p class="product-weight">400 g</p>
-              <div class="price-container">
-                <span class="current-price">₹70</span>
-                <span class="original-price">₹85</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Yogurt', 70, 'https://images.unsplash.com/photo-1571212515416-fef01fc43637?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="90" data-name="Free-Range Eggs">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://images.unsplash.com/photo-1598965675045-45c5e72c7d05?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Free-Range Eggs">
-            <div class="product-info">
-              <h3>Free-Range Eggs</h3>
-              <p class="product-weight">12 pieces</p>
-              <div class="price-container">
-                <span class="current-price">₹90</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Free-Range Eggs', 90, 'https://images.unsplash.com/photo-1598965675045-45c5e72c7d05?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="85" data-name="Greek Yogurt">
-            <div class="food-type-indicator veg"></div>
-            <div class="product-badge">HEALTHY</div>
-            <img src="https://www.biggerbolderbaking.com/wp-content/uploads/2025/04/Greek-Yogurt-thumbnail.jpg" alt="Greek Yogurt">
-            <div class="product-info">
-              <h3>Greek Yogurt</h3>
-              <p class="product-weight">500 g</p>
-              <div class="price-container">
-                <span class="current-price">₹85</span>
-                <span class="original-price">₹95</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Greek Yogurt', 85, 'https://www.biggerbolderbaking.com/wp-content/uploads/2025/04/Greek-Yogurt-thumbnail.jpg')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card veg" data-type="veg" data-price="120" data-name="Butter">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://www.bhg.com/thmb/-luCrhu9Eh1C2u-oZXseX5tKAbk=/3000x0/filters:no_upscale():strip_icc()/bhg-how-many-grams-are-in-one-stick-of-butter-03-2c71be43bb20474384f7483c3827f8e7.jpg" alt="Butter">
-            <div class="product-info">
-              <h3>Butter</h3>
-              <p class="product-weight">250 g</p>
-              <div class="price-container">
-                <span class="current-price">₹120</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Butter', 120, 'https://www.bhg.com/thmb/-luCrhu9Eh1C2u-oZXseX5tKAbk=/3000x0/filters:no_upscale():strip_icc()/bhg-how-many-grams-are-in-one-stick-of-butter-03-2c71be43bb20474384f7483c3827f8e7.jpg')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card veg" data-type="veg" data-price="95" data-name="Cream Cheese">
-            <div class="food-type-indicator veg"></div>
-            <div class="product-badge">NEW</div>
-            <img src="https://tastegreatfoodie.com/wp-content/uploads/2023/02/two-ingredient-cream-cheese.jpg" alt="Cream Cheese">
-            <div class="product-info">
-              <h3>Cream Cheese</h3>
-              <p class="product-weight">200 g</p>
-              <div class="price-container">
-                <span class="current-price">₹95</span>
-                <span class="original-price">₹110</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Cream Cheese', 95, 'https://tastegreatfoodie.com/wp-content/uploads/2023/02/two-ingredient-cream-cheese.jpg')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card veg" data-type="veg" data-price="65" data-name="Eggs">
-            <div class="food-type-indicator veg"></div>
-            <div class="product-badge">BESTSELLER</div>
-            <img src="https://images.unsplash.com/photo-1587486913049-53fc88980cfc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Eggs">
-            <div class="product-info">
-              <h3>Eggs</h3>
-              <p class="product-weight">Dozen</p>
-              <div class="price-container">
-                <span class="current-price">₹65</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Eggs', 65, 'https://images.unsplash.com/photo-1587486913049-53fc88980cfc?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- New Section: Snacks -->
-    <section class="deals-section" id="snacks">
-      <div class="container">
-        <div class="section-header">
-          <h2>Snacks</h2>
-        </div>
-
-        <div class="products-grid">
-          <div class="product-card veg" data-type="veg" data-price="40" data-name="Potato Chips">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Potato Chips">
-            <div class="product-info">
-              <h3>Potato Chips</h3>
-              <p class="product-weight">150 g</p>
-              <div class="price-container">
-                <span class="current-price">₹40</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Potato Chips', 40, 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="65" data-name="Mixed Nuts">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://satvikk.com/wp-content/uploads/2022/08/mixedbuts.jpg" alt="Mixed Nuts">
-            <div class="product-info">
-              <h3>Mixed Nuts</h3>
-              <p class="product-weight">200 g</p>
-              <div class="price-container">
-                <span class="current-price">₹65</span>
-                <span class="original-price">₹80</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Mixed Nuts', 65, 'https://images.unsplash.com/photo-1606923829579-0cb981a83e2b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="55" data-name="Chocolate Bar">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://veggieworldrecipes.com/wp-content/uploads/2023/11/raw-vegan-chocolate-recipe-1.jpg" alt="Chocolate Bar">
-            <div class="product-info">
-              <h3>Chocolate Bar</h3>
-              <p class="product-weight">100 g</p>
-              <div class="price-container">
-                <span class="current-price">₹55</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Chocolate Bar', 55, 'https://images.unsplash.com/photo-1548907040-4baa42d10919?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <div class="product-card veg" data-type="veg" data-price="30" data-name="Popcorn">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://images.unsplash.com/photo-1578849278619-e73505e9610f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Popcorn">
-            <div class="product-info">
-              <h3>Popcorn</h3>
-              <p class="product-weight">100 g</p>
-              <div class="price-container">
-                <span class="current-price">₹30</span>
-                <span class="original-price">₹40</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Popcorn', 30, 'https://images.unsplash.com/photo-1578849278619-e73505e9610f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card veg" data-type="veg" data-price="45" data-name="Potato Chips">
-            <div class="food-type-indicator veg"></div>
-            <div class="product-badge">BESTSELLER</div>
-            <img src="https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Potato Chips">
-            <div class="product-info">
-              <h3>Potato Chips</h3>
-              <p class="product-weight">150 g</p>
-              <div class="price-container">
-                <span class="current-price">₹45</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Potato Chips', 45, 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <div class="product-card veg" data-type="veg" data-price="35" data-name="Nachos">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://www.seriouseats.com/thmb/YBUAG17xy1nWYGPmFcJKeoODTzk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/cheese-sauce-for-cheese-fries-and-nachos-hero-01-e6ccf966688c43ec8025cf9a19678423.jpg" alt="Nachos">
-            <div class="product-info">
-              <h3>Nachos</h3>
-              <p class="product-weight">200 g</p>
-              <div class="price-container">
-                <span class="current-price">₹35</span>
-                <span class="original-price">₹45</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Nachos', 35, 'https://www.seriouseats.com/thmb/YBUAG17xy1nWYGPmFcJKeoODTzk=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/cheese-sauce-for-cheese-fries-and-nachos-hero-01-e6ccf966688c43ec8025cf9a19678423.jpg')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <!-- <div class="product-card veg" data-type="veg" data-price="55" data-name="Popcorn">
-            <div class="food-type-indicator veg"></div>
-            <div class="product-badge">NEW</div>
-            <img src="https://images.unsplash.com/photo-1625944525533-473f1a7d7349?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Popcorn">
-            <div class="product-info">
-              <h3>Popcorn</h3>
-              <p class="product-weight">300 g</p>
-              <div class="price-container">
-                <span class="current-price">₹55</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Popcorn', 55, 'https://images.unsplash.com/photo-1625944525533-473f1a7d7349?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div> -->
-
-          <div class="product-card veg" data-type="veg" data-price="65" data-name="Mixed Nuts">
-            <div class="food-type-indicator veg"></div>
-            <div class="product-badge">HEALTHY</div>
-            <img src="https://images.unsplash.com/photo-1599599810769-bcde5a160d32?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Mixed Nuts">
-            <div class="product-info">
-              <h3>Mixed Nuts</h3>
-              <p class="product-weight">250 g</p>
-              <div class="price-container">
-                <span class="current-price">₹65</span>
-                <span class="original-price">₹75</span>
-              </div>
-              <div class="quantity-controls">
-                <div class="quantity-btn minus" onclick="decreaseQuantity(this)">
-                  <i class="fas fa-minus"></i>
-                </div>
-                <input type="number" class="quantity-input" value="1" min="1" max="10" readonly>
-                <div class="quantity-btn plus" onclick="increaseQuantity(this)">
-                  <i class="fas fa-plus"></i>
-                </div>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Mixed Nuts', 65, 'https://images.unsplash.com/photo-1599599810769-bcde5a160d32?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i>
-                Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="featured-brands">
-      <div class="container">
-        <div class="section-header">
-          <h2>New Companies Around</h2>
-        </div>
-
-        <div class="products-grid">
-          <div class="product-card">
-            <img src="https://i.pinimg.com/736x/16/32/8c/16328c1e8ca729d48f93cff0ccab1884.jpg" alt="Amul">
-            <div class="product-info">
-              <h3>Amul</h3>
-              <p>Leading dairy brand in India</p>
-            </div>
-          </div>
-
-          <div class="product-card">
-            <img src="https://static.startuptalky.com/2021/06/Britannia-Logo-StartupTalky.jpg" alt="Britannia">
-            <div class="product-info">
-              <h3>Britannia</h3>
-              <p>Trusted bakery and dairy products</p>
-            </div>
-          </div>
-
-          <div class="product-card">
-            <img src="https://www.groupcaliber.com/wp-content/uploads/2022/08/nestle_case_study_logo_feaure_image.png" alt="Nestle">
-            <div class="product-info">
-              <h3>Nestle</h3>
-              <p>Global leader in food and beverages</p>
-            </div>
-          </div>
-          
-          <div class="product-card">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEwf5IdymEwMXUntX1wqvioGFJhUr7-_BKGQ&s" alt="Kellogg's">
-            <div class="product-info">
-              <h3>Kellogg's</h3>
-              <p>Premium breakfast cereals</p>
-            </div>
-          </div>
-          
-          <div class="product-card">
-            <img src="https://yt3.googleusercontent.com/ytc/AIdro_lvKujzIpoGbHnSB88Iu_BbFlk-phTxBCu3tKG1CXf5ow=s900-c-k-c0x00ffffff-no-rj" alt="PepsiCo">
-            <div class="product-info">
-              <h3>PepsiCo</h3>
-              <p>Beverages and snack foods</p>
-            </div>
-          </div>
-          
-          <div class="product-card">
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdldB0vUPxUsByhrHkcsp9kx7PBFCPDo2Nbw&s" alt="Unilever">
-            <div class="product-info">
-              <h3>Unilever</h3>
-              <p>Personal care and household products</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="categories-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Usually Bought by Other Users</h2>
-        </div>
-
-        <div class="products-grid" id="popularProductsGrid">
-          <!-- Fresh Apples -->
-          <div class="product-card veg" data-type="veg" data-price="120" data-name="Fresh Apples">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806517/apples_qftlc0.webp" alt="Fresh Apples">
-            <div class="product-info">
-              <h3>Fresh Apples</h3>
-              <p class="product-weight">1 kg</p>
-              <div class="price-container">
-                <span class="current-price">₹120</span>
-                <span class="original-price">₹150</span>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Fresh Apples', 120, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806517/apples_qftlc0.webp')">
-                <i class="fas fa-shopping-cart"></i> Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <!-- Organic Bananas -->
-          <div class="product-card veg" data-type="veg" data-price="85" data-name="Organic Bananas">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806521/banana_a8uctz.avif" alt="Organic Bananas">
-            <div class="product-info">
-              <h3>Organic Bananas</h3>
-              <p class="product-weight">1 dozen</p>
-              <div class="price-container">
-                <span class="current-price">₹85</span>
-                <span class="original-price">₹100</span>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Organic Bananas', 85, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806521/banana_a8uctz.avif')">
-                <i class="fas fa-shopping-cart"></i> Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <!-- Fresh Milk -->
-          <div class="product-card veg" data-type="veg" data-price="60" data-name="Fresh Milk">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806518/verka_milk_ug4pxg.jpg" alt="Fresh Milk">
-            <div class="product-info">
-              <h3>Fresh Milk</h3>
-              <p class="product-weight">1 liter</p>
-              <div class="price-container">
-                <span class="current-price">₹60</span>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Fresh Milk', 60, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806518/verka_milk_ug4pxg.jpg')">
-                <i class="fas fa-shopping-cart"></i> Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <!-- Whole Wheat Bread -->
-          <div class="product-card veg" data-type="veg" data-price="50" data-name="Whole Wheat Bread">
-            <div class="food-type-indicator veg"></div>
-            <img src="https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg" alt="Whole Wheat Bread">
-            <div class="product-info">
-              <h3>Whole Wheat Bread</h3>
-              <p class="product-weight">400 g</p>
-              <div class="price-container">
-                <span class="current-price">₹50</span>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Whole Wheat Bread', 50, 'https://res.cloudinary.com/dsmrhr0lx/image/upload/v1744806516/alsafaa_bread_sghonl.jpg')">
-                <i class="fas fa-shopping-cart"></i> Add to Cart
-              </button>
-            </div>
-          </div>
-
-          <!-- Chicken Breast -->
-          <div class="product-card non-veg" data-type="non-veg" data-price="200" data-name="Chicken Breast">
-            <div class="food-type-indicator non-veg"></div>
-            <img src="https://media.istockphoto.com/id/462258465/photo/raw-chicken-breast-fillets.jpg?s=612x612&w=0&k=20&c=dTLkpzyV8WoRhMxlXaHlnIN9SPktlkqUfphtxykC0ws=" alt="Chicken Breast">
-            <div class="product-info">
-              <h3>Chicken Breast</h3>
-              <p class="product-weight">500 g</p>
-              <div class="price-container">
-                <span class="current-price">₹200</span>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Chicken Breast', 200, 'https://media.istockphoto.com/id/462258465/photo/raw-chicken-breast-fillets.jpg')">
-                <i class="fas fa-shopping-cart"></i> Add to Cart
-              </button>
-            </div>
-          </div>
-          
-          <!-- Chocolate Cake -->
-          <div class="product-card veg" data-type="veg" data-price="120" data-name="Chocolate Cake">
-            <div class="food-type-indicator veg"></div>
-            <div class="product-badge">BESTSELLER</div>
-            <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Chocolate Cake">
-            <div class="product-info">
-              <h3>Chocolate Cake</h3>
-              <p class="product-weight">500 g</p>
-              <div class="price-container">
-                <span class="current-price">₹120</span>
-                <span class="original-price">₹150</span>
-              </div>
-              <button class="add-to-cart" onclick="addToCart('Chocolate Cake', 120, 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80')">
-                <i class="fas fa-shopping-cart"></i> Add to Cart
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
   </main>
       
   <footer class="footer">
@@ -3406,6 +2654,29 @@
 
         document.addEventListener('click', function() {
           profileDropdown.style.display = 'none';
+        });
+      }
+      
+      // Initialize wishlist
+      updateWishlistUI();
+      
+      // Initialize wishlist dropdown
+      const wishlistIcon = document.getElementById('wishlistIcon');
+      const wishlistDropdown = document.getElementById('wishlistDropdown');
+      
+      if (wishlistIcon && wishlistDropdown) {
+        wishlistIcon.addEventListener('click', function(e) {
+          e.stopPropagation();
+          wishlistDropdown.classList.toggle('show');
+          if (wishlistDropdown.classList.contains('show')) {
+            loadWishlistDropdownItems();
+          }
+        });
+        
+        document.addEventListener('click', function(e) {
+          if (!wishlistDropdown.contains(e.target) && !wishlistIcon.contains(e.target)) {
+            wishlistDropdown.classList.remove('show');
+          }
         });
       }
     });
@@ -3631,7 +2902,7 @@
     });
 
     // Cart functionality
-    function addToCart(name, price, imageUrl) {
+    function addToCart(name, price, imageUrl, type) {
       // Get the current cart from local storage or initialize an empty array
       let cart = JSON.parse(localStorage.getItem('cart')) || [];
       // Check if the item already exists in the cart
@@ -3641,7 +2912,7 @@
         cart[itemIndex].quantity += 1;
       } else {
         // If the item doesn't exist, add it to the cart
-        cart.push({ name: name, price: price, imageUrl: imageUrl, quantity: 1 });
+        cart.push({ name: name, price: price, imageUrl: imageUrl, quantity: 1, type: type });
       }
       // Save the updated cart back to local storage
       localStorage.setItem('cart', JSON.stringify(cart));
@@ -3656,6 +2927,138 @@
       let cart = JSON.parse(localStorage.getItem('cart')) || [];
       let totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
       document.querySelector('.cart-count').textContent = totalItems;
+    }
+
+    // Wishlist functionality
+    function toggleWishlist(button, name, price, imageUrl, type) {
+      // Get current wishlist
+      let wishlist = JSON.parse(localStorage.getItem('munchmart_wishlist')) || [];
+      
+      // Check if item is already in wishlist
+      const itemIndex = wishlist.findIndex(item => item.name === name);
+      
+      if (itemIndex !== -1) {
+        // Remove from wishlist
+        wishlist.splice(itemIndex, 1);
+        button.classList.remove('active');
+        showToast(`${name} removed from wishlist`);
+      } else {
+        // Add to wishlist
+        wishlist.push({
+          name: name,
+          price: price,
+          imageUrl: imageUrl,
+          type: type
+        });
+        button.classList.add('active');
+        showToast(`${name} added to wishlist`);
+      }
+      
+      // Save updated wishlist
+      localStorage.setItem('munchmart_wishlist', JSON.stringify(wishlist));
+      
+      // Update wishlist UI
+      updateWishlistUI();
+    }
+    
+    // Update wishlist UI
+    function updateWishlistUI() {
+      // Get current wishlist
+      const wishlist = JSON.parse(localStorage.getItem('munchmart_wishlist')) || [];
+      
+      // Update wishlist count
+      const wishlistCount = document.getElementById('wishlistCount');
+      if (wishlistCount) {
+        wishlistCount.textContent = wishlist.length;
+      }
+      
+      // Update wishlist item count in dropdown
+      const wishlistItemCount = document.getElementById('wishlistItemCount');
+      if (wishlistItemCount) {
+        wishlistItemCount.textContent = `${wishlist.length} items`;
+      }
+      
+      // Mark active wishlist buttons
+      const wishlistButtons = document.querySelectorAll('.wishlist-button');
+      wishlistButtons.forEach(button => {
+        const productName = button.getAttribute('onclick').split("'")[1];
+        const isInWishlist = wishlist.some(item => item.name === productName);
+        if (isInWishlist) {
+          button.classList.add('active');
+        } else {
+          button.classList.remove('active');
+        }
+      });
+    }
+    
+    // Load wishlist items in dropdown
+    function loadWishlistDropdownItems() {
+      const wishlist = JSON.parse(localStorage.getItem('munchmart_wishlist')) || [];
+      const wishlistItems = document.getElementById('wishlistItems');
+      const emptyWishlistMessage = document.getElementById('emptyWishlistMessage');
+      
+      // Clear previous items
+      wishlistItems.innerHTML = '';
+      
+      // Show empty message if wishlist is empty
+      if (wishlist.length === 0) {
+        emptyWishlistMessage.style.display = 'block';
+        return;
+      }
+      
+      // Hide empty message
+      emptyWishlistMessage.style.display = 'none';
+      
+      // Add items to dropdown
+      wishlist.slice(0, 4).forEach(item => {
+        const itemElement = document.createElement('div');
+        itemElement.className = 'wishlist-item';
+        itemElement.innerHTML = `
+          <img src="${item.imageUrl}" alt="${item.name}" onerror="this.src='https://via.placeholder.com/50x50?text=Product'">
+          <div class="wishlist-item-details">
+            <div class="wishlist-item-name">${item.name}</div>
+            <div class="wishlist-item-price">₹${item.price}</div>
+          </div>
+          <div class="wishlist-item-remove" onclick="removeFromWishlist('${item.name}')">
+            <i class="fas fa-times"></i>
+          </div>
+        `;
+        wishlistItems.appendChild(itemElement);
+      });
+      
+      // Add "and X more" message if there are more items
+      if (wishlist.length > 4) {
+        const moreElement = document.createElement('div');
+        moreElement.className = 'wishlist-item';
+        moreElement.style.justifyContent = 'center';
+        moreElement.style.color = '#666';
+        moreElement.innerHTML = `and ${wishlist.length - 4} more items...`;
+        wishlistItems.appendChild(moreElement);
+      }
+    }
+    
+    // Remove item from wishlist
+    function removeFromWishlist(name) {
+      // Get current wishlist
+      let wishlist = JSON.parse(localStorage.getItem('munchmart_wishlist')) || [];
+      
+      // Find item index
+      const itemIndex = wishlist.findIndex(item => item.name === name);
+      
+      if (itemIndex !== -1) {
+        // Remove item
+        wishlist.splice(itemIndex, 1);
+        
+        // Save updated wishlist
+        localStorage.setItem('munchmart_wishlist', JSON.stringify(wishlist));
+        
+        // Update UI
+        updateWishlistUI();
+        loadWishlistDropdownItems();
+        
+        // Show toast
+        showToast(`${name} removed from wishlist`);
+      }
     }
 
     // Toast notification
@@ -3885,3 +3288,4 @@
   </script>
 </body>
 </html>
+{% load static %}
