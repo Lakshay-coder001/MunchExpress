@@ -438,7 +438,7 @@
                     localStorage.removeItem('cart');
                     
                     // Redirect to Django view with GET parameters
-                    window.location.href = `/order_confirmation/&phone=${encodeURIComponent(phone)}&amount=${encodeURIComponent(total.toFixed(2))}`;
+                    window.location.href = `/order_confirmation/?phone=${encodeURIComponent(phone)}&amount=${encodeURIComponent(total.toFixed(2))}`;
 
 
                 },
