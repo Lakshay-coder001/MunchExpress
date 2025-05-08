@@ -39,4 +39,4 @@
 ## 📦 Installation & Setup
 
 1. **Clone the Repository**
-       [git clone https://github.com/yourusername/mun](https://github.com/Iishita1/MunchExpress.git)
+       https://github.com/Iishita1/MunchExpress.git
