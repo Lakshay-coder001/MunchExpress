@@ -22,13 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-bm%a%rn0(^9j%y9qda7tww&tv6_p%l07mz6c!)!v^zsr&d(z*q') 
+SECRET_KEY = 'django-insecure-bm%a%rn0(^9j%y9qda7tww&tv6_p%l07mz6c!)!v^zsr&d(z*q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-DEBUG = os.getenv('DEBUG', 'False') == 'True'
+DEBUG = 'True'
 
-ALLOWED_HOSTS = ['munchmart.onrender.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -82,7 +82,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'MunchExpress.urls'
