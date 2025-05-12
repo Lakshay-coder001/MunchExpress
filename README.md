@@ -39,4 +39,4 @@
 ## 📦 Installation & Setup
 
 1. **Clone the Repository**
-       https://github.com/Iishita1/MunchExpress.git
+       https://github.com/Lakshay-coder001/MunchExpress.git
